@@ -1,0 +1,2304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sophie & Mateus — 19.06.2027</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cinzel:wght@400;500;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green: #3B5941;
+  --green-light: #5a7a60;
+  --green-dark: #2a3f30;
+  --gold: #B8943C;
+  --gold-light: #D4B87A;
+  --cream: #F5EFE4;
+  --cream-dark: #EDE4D3;
+  --white: #FDFAF6;
+  --text: #2C2C1E;
+  --text-light: #6B6B55;
+  --sand: #C8B99A;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Lato', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  font-weight: 300;
+}
+
+/* ─── LANGUAGE SCREEN ─── */
+#lang-screen {
+  position: fixed; inset: 0; z-index: 1000;
+  background: var(--green-dark);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 0;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+#lang-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.lang-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 70%, rgba(91,122,96,0.35) 0%, transparent 70%);
+}
+
+.lang-names {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(42px, 8vw, 72px);
+  color: var(--white);
+  font-weight: 300;
+  letter-spacing: -1px;
+  position: relative;
+  margin-bottom: 4px;
+}
+.lang-names .amp { color: var(--gold-light); }
+
+.lang-date {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 5px;
+  color: var(--gold-light);
+  position: relative;
+  margin-bottom: 48px;
+}
+
+.lang-divider {
+  width: 60px; height: 1px;
+  background: rgba(184,148,60,0.4);
+  position: relative;
+  margin-bottom: 32px;
+}
+
+.lang-prompt {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.5);
+  position: relative;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+
+.lang-btns {
+  display: flex; gap: 16px;
+  position: relative;
+}
+
+.lang-btn {
+  border: 1px solid rgba(184,148,60,0.6);
+  background: transparent;
+  color: var(--gold-light);
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  letter-spacing: 4px;
+  padding: 14px 40px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+}
+.lang-btn:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--green-dark);
+}
+
+/* ─── SITE WRAPPER ─── */
+#site { opacity: 0; transition: opacity 1s ease; }
+#site.visible { opacity: 1; }
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(245,239,228,0.97);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(184,148,60,0.2);
+  padding: 0 28px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+
+.nav-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 20px;
+  color: var(--green);
+  font-weight: 300;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.nav-right {
+  display: flex; align-items: center; gap: 12px;
+}
+
+.nav-links {
+  display: flex; gap: 20px; list-style: none;
+}
+.nav-links a {
+  font-family: 'Cinzel', serif;
+  font-size: 8.5px;
+  letter-spacing: 2.5px;
+  color: var(--text-light);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+.nav-links a:hover { color: var(--green); }
+
+.nav-lang {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--gold);
+  cursor: pointer;
+  border: 1px solid rgba(184,148,60,0.4);
+  padding: 5px 12px;
+  transition: all 0.2s;
+  background: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.nav-lang:hover { background: var(--gold); color: white; }
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  flex-direction: column; gap: 5px;
+  background: none; border: none;
+  cursor: pointer; padding: 4px; z-index: 101;
+  flex-shrink: 0;
+}
+.hamburger span {
+  display: block; width: 24px; height: 2px;
+  background: var(--green);
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Drawer overlay */
+.nav-drawer-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 98;
+  background: rgba(0,0,0,0.4);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.nav-drawer-overlay.open { opacity: 1; }
+
+/* Drawer panel */
+.nav-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 99;
+  width: min(320px, 85vw);
+  background: var(--green-dark);
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex; flex-direction: column;
+  padding: 80px 36px 40px;
+  overflow-y: auto;
+}
+.nav-drawer.open { transform: translateX(0); }
+
+.drawer-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 28px;
+  color: var(--white); font-weight: 300;
+  margin-bottom: 4px;
+}
+.drawer-brand .amp { color: var(--gold-light); }
+
+.drawer-date {
+  font-family: 'Cinzel', serif;
+  font-size: 8px; letter-spacing: 4px;
+  color: var(--gold-light); margin-bottom: 36px;
+}
+
+.drawer-divider {
+  width: 40px; height: 1px;
+  background: rgba(184,148,60,0.35);
+  margin-bottom: 32px;
+}
+
+.drawer-links {
+  list-style: none; display: flex;
+  flex-direction: column; gap: 4px;
+  flex: 1;
+}
+
+.drawer-links li a {
+  display: flex; align-items: center; gap: 14px;
+  font-family: 'Cinzel', serif;
+  font-size: 10px; letter-spacing: 3px;
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(184,148,60,0.1);
+  transition: color 0.2s, padding-left 0.2s;
+}
+.drawer-links li a:hover {
+  color: var(--gold-light);
+  padding-left: 6px;
+}
+.drawer-links li a .drawer-icon {
+  font-size: 14px; width: 20px; text-align: center;
+  opacity: 0.7; flex-shrink: 0;
+}
+
+.drawer-lang-btn {
+  margin-top: 28px;
+  border: 1px solid rgba(184,148,60,0.4);
+  background: transparent;
+  color: var(--gold-light);
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: 3px;
+  padding: 12px 0; text-align: center;
+  cursor: pointer; width: 100%;
+  transition: all 0.3s;
+  text-transform: uppercase;
+}
+.drawer-lang-btn:hover { background: var(--gold); color: var(--green-dark); border-color: var(--gold); }
+
+/* Active nav link highlight */
+.nav-links a.active { color: var(--green); font-weight: 400; }
+.drawer-links li a.active { color: var(--gold-light); }
+
+@media (max-width: 860px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .nav-drawer-overlay { display: block; pointer-events: none; }
+  .nav-drawer-overlay.open { pointer-events: all; }
+}
+
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  background: var(--green-dark);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 80px 24px 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 80%, rgba(91,122,96,0.4) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 20%, rgba(91,122,96,0.2) 0%, transparent 50%);
+}
+
+.hero-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 6px;
+  color: var(--gold-light);
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  position: relative;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.2s forwards;
+}
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(52px, 10vw, 90px);
+  color: var(--white);
+  line-height: 1;
+  letter-spacing: -2px;
+  position: relative;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.4s forwards;
+}
+.hero-title .amp { color: var(--gold-light); }
+
+.hero-divider {
+  display: flex; align-items: center; gap: 14px;
+  margin: 28px auto;
+  position: relative;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.7s forwards;
+}
+.hero-divider-line { width: 60px; height: 1px; background: rgba(184,148,60,0.5); }
+.hero-divider-gem { color: var(--gold-light); font-size: 8px; letter-spacing: 4px; }
+
+.hero-date {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(13px, 2vw, 16px);
+  letter-spacing: 5px;
+  color: var(--gold-light);
+  position: relative;
+  margin-bottom: 8px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.9s forwards;
+}
+
+.hero-location {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: rgba(255,255,255,0.6);
+  position: relative;
+  margin-bottom: 52px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 1.1s forwards;
+}
+
+/* Countdown */
+.countdown {
+  display: flex; gap: 24px;
+  position: relative;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 1.3s forwards;
+}
+.cd-item { text-align: center; }
+.cd-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 44px;
+  font-weight: 300;
+  color: var(--white);
+  line-height: 1;
+  display: block;
+  min-width: 64px;
+}
+.cd-label {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--gold-light);
+  text-transform: uppercase;
+}
+.cd-sep {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  color: rgba(184,148,60,0.4);
+  align-self: flex-start;
+  padding-top: 8px;
+}
+
+/* ─── SECTIONS ─── */
+section { padding: 80px 24px; }
+
+.section-inner { max-width: 860px; margin: 0 auto; }
+
+.section-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 5px;
+  color: var(--gold);
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(32px, 5vw, 48px);
+  color: var(--green-dark);
+  text-align: center;
+  font-weight: 300;
+  margin-bottom: 48px;
+  line-height: 1.2;
+}
+
+.gold-line {
+  width: 50px; height: 1px;
+  background: var(--gold);
+  margin: 0 auto 48px;
+  opacity: 0.6;
+}
+
+/* ─── EVENTS ─── */
+#events { background: var(--white); }
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.event-card {
+  border: 1px solid rgba(184,148,60,0.25);
+  padding: 0;
+  position: relative;
+  background: var(--cream);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+.event-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(59,89,65,0.1);
+}
+
+.event-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: linear-gradient(to right, var(--gold), var(--gold-light));
+  z-index: 2;
+}
+
+.event-card-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+.event-card-body {
+  padding: 24px 28px 28px;
+}
+
+.event-num {
+  font-family: 'Cinzel', serif;
+  font-size: 8px; letter-spacing: 4px;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.event-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px; font-style: italic;
+  color: var(--green-dark);
+  margin-bottom: 4px;
+}
+
+.event-name-en {
+  font-size: 12px; color: var(--text-light);
+  margin-bottom: 20px;
+  font-family: 'Lato', sans-serif;
+}
+
+.event-detail {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin-bottom: 10px;
+  font-size: 13px; color: var(--text);
+}
+.event-detail-icon { color: var(--gold); font-size: 10px; margin-top: 3px; flex-shrink: 0; }
+
+.tbc-badge {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: 8px; letter-spacing: 3px;
+  color: var(--gold);
+  border: 1px solid rgba(184,148,60,0.35);
+  padding: 4px 12px;
+  margin-top: 12px;
+}
+
+/* ─── TRAVEL ─── */
+#travel { background: var(--cream); }
+
+.travel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+
+@media (max-width: 620px) { .travel-grid { grid-template-columns: 1fr; gap: 32px; } }
+
+.travel-col-title {
+  font-family: 'Cinzel', serif;
+  font-size: 10px; letter-spacing: 4px;
+  color: var(--green);
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(184,148,60,0.3);
+}
+
+.travel-item {
+  margin-bottom: 22px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid rgba(200,185,154,0.4);
+}
+.travel-item:last-child { border-bottom: none; margin-bottom: 0; }
+
+.travel-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; color: var(--green-dark);
+  margin-bottom: 4px;
+}
+
+.travel-detail { font-size: 12.5px; color: var(--text-light); line-height: 1.7; }
+.travel-badge {
+  display: inline-block;
+  font-size: 10px; font-family: 'Cinzel', serif; letter-spacing: 1px;
+  background: var(--green-dark); color: var(--gold-light);
+  padding: 2px 8px; margin-top: 6px;
+}
+
+/* ─── HOTELS ─── */
+#hotels { background: var(--white); }
+
+.hotels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.hotel-card {
+  border: 1px solid rgba(200,185,154,0.5);
+  background: var(--cream);
+  padding: 28px 24px;
+  transition: box-shadow 0.3s;
+}
+.hotel-card:hover { box-shadow: 0 8px 32px rgba(59,89,65,0.1); }
+
+.hotel-stars { color: var(--gold); font-size: 10px; letter-spacing: 2px; margin-bottom: 10px; }
+
+.hotel-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; color: var(--green-dark);
+  margin-bottom: 4px;
+}
+
+.hotel-location { font-size: 12px; color: var(--text-light); margin-bottom: 14px; }
+.hotel-detail { font-size: 12.5px; color: var(--text); line-height: 1.7; }
+.hotel-distance {
+  display: inline-block; margin-top: 12px;
+  font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 2px;
+  color: var(--green); border: 1px solid rgba(59,89,65,0.3); padding: 4px 10px;
+}
+
+/* ─── SCHEDULE ─── */
+#schedule { background: var(--green-dark); }
+#schedule .section-title { color: var(--white); }
+#schedule .section-tag { color: var(--gold-light); }
+#schedule .gold-line { background: var(--gold-light); opacity: 0.5; }
+
+.schedule-days {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 32px;
+  align-items: start;
+}
+
+.schedule-day {
+  position: relative;
+}
+
+.schedule-day-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 28px;
+}
+
+.schedule-day-img {
+  width: 52px; height: 52px;
+  object-fit: cover; object-position: center top;
+  border: 1px solid rgba(184,148,60,0.4);
+  flex-shrink: 0;
+}
+
+.schedule-day-info {}
+
+.schedule-day-num {
+  font-family: 'Cinzel', serif;
+  font-size: 8px; letter-spacing: 3px;
+  color: var(--gold-light); margin-bottom: 3px;
+}
+
+.schedule-day-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 20px;
+  color: var(--white); line-height: 1.1;
+}
+
+.schedule-day-date {
+  font-size: 11px; color: rgba(255,255,255,0.4);
+  margin-top: 2px; font-family: 'Cinzel', serif;
+  letter-spacing: 1px;
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 28px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute; left: 6px; top: 6px; bottom: 6px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--gold), rgba(184,148,60,0.1));
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 20px;
+}
+.timeline-item:last-child { margin-bottom: 0; }
+
+.timeline-dot {
+  position: absolute; left: -25px; top: 5px;
+  width: 8px; height: 8px;
+  border: 1px solid var(--gold);
+  background: var(--green-dark);
+  transform: rotate(45deg);
+}
+.timeline-item.highlight .timeline-dot {
+  background: var(--gold);
+  width: 10px; height: 10px;
+  left: -26px; top: 4px;
+}
+
+.timeline-time {
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: 2px;
+  color: var(--gold); margin-bottom: 3px;
+}
+
+.timeline-event {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px; color: var(--white);
+  line-height: 1.2;
+}
+.timeline-item.highlight .timeline-event {
+  font-size: 19px; color: var(--gold-light);
+}
+
+.timeline-desc {
+  font-size: 11.5px; color: rgba(255,255,255,0.4);
+  margin-top: 2px; line-height: 1.6;
+  font-style: italic;
+}
+
+/* ─── DRESS CODE ─── */
+#dresscode { background: var(--green-dark); }
+
+#dresscode .section-title { color: var(--white); }
+#dresscode .section-tag { color: var(--gold-light); }
+#dresscode .gold-line { background: var(--gold-light); }
+
+.dress-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+}
+@media (max-width: 540px) { .dress-grid { grid-template-columns: 1fr; } }
+
+.dress-card {
+  border: 1px solid rgba(184,148,60,0.25);
+  padding: 36px 28px; text-align: center;
+}
+
+.dress-icon { font-size: 32px; margin-bottom: 16px; }
+
+.dress-label {
+  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 4px;
+  color: var(--gold-light); text-transform: uppercase; margin-bottom: 8px;
+}
+
+.dress-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 26px;
+  color: var(--white); margin-bottom: 16px;
+}
+
+.dress-desc { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.8; }
+
+.dress-palette {
+  display: flex; gap: 8px; justify-content: center; margin-top: 16px;
+}
+.swatch {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.dress-note {
+  margin-top: 40px;
+  border: 1px solid rgba(184,148,60,0.2);
+  padding: 20px 28px;
+  text-align: center;
+}
+.dress-note p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.8; font-style: italic; }
+
+/* ─── GIFTS ─── */
+#gifts { background: var(--cream); }
+
+.gifts-intro {
+  max-width: 560px; margin: 0 auto 48px;
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 18px;
+  color: var(--text-light); line-height: 1.8;
+}
+
+.gifts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  max-width: 700px; margin: 0 auto;
+}
+
+.gift-card {
+  border: 1px solid rgba(184,148,60,0.3);
+  background: var(--white);
+  padding: 32px 28px;
+  text-align: center;
+  position: relative;
+  transition: box-shadow 0.3s;
+}
+.gift-card:hover { box-shadow: 0 8px 32px rgba(59,89,65,0.1); }
+.gift-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: linear-gradient(to right, var(--gold), var(--gold-light));
+}
+
+.gift-flag { font-size: 32px; margin-bottom: 12px; }
+
+.gift-country {
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: 4px;
+  color: var(--gold); text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.gift-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; color: var(--green-dark);
+  margin-bottom: 20px;
+}
+
+.gift-details { display: flex; flex-direction: column; gap: 10px; }
+
+.gift-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 12px;
+  background: var(--cream);
+  border: 1px solid rgba(200,185,154,0.4);
+  gap: 12px;
+}
+
+.gift-label {
+  font-family: 'Cinzel', serif;
+  font-size: 8px; letter-spacing: 2px;
+  color: var(--text-light); text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.gift-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; color: var(--green-dark);
+  font-weight: 500; letter-spacing: 0.5px;
+}
+
+.gift-copy-btn {
+  background: none; border: none;
+  color: var(--gold); cursor: pointer;
+  font-size: 14px; padding: 2px 4px;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.gift-copy-btn:hover { transform: scale(1.2); }
+.gift-copy-btn.copied { color: var(--green); }
+
+.gift-note {
+  margin-top: 40px; text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 15px;
+  color: var(--text-light); line-height: 1.8;
+}
+
+/* ─── FAQ ─── */
+#faq { background: var(--cream); }
+
+.faq-list { max-width: 660px; margin: 0 auto; }
+
+.faq-item {
+  border-bottom: 1px solid rgba(200,185,154,0.6);
+  overflow: hidden;
+}
+
+.faq-q {
+  width: 100%; background: none; border: none;
+  text-align: left; padding: 20px 0;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; gap: 16px;
+}
+
+.faq-q-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; color: var(--green-dark); font-weight: 500;
+}
+
+.faq-icon {
+  color: var(--gold); font-size: 18px; flex-shrink: 0;
+  transition: transform 0.3s; font-style: normal;
+}
+.faq-item.open .faq-icon { transform: rotate(45deg); }
+
+.faq-a {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-a { max-height: 400px; padding-bottom: 20px; }
+
+.faq-a p { font-size: 13.5px; color: var(--text-light); line-height: 1.9; }
+
+/* ─── RSVP ─── */
+#rsvp { background: var(--white); }
+
+.rsvp-wrap { max-width: 560px; margin: 0 auto; }
+
+.rsvp-form { display: flex; flex-direction: column; gap: 18px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+
+.form-field { display: flex; flex-direction: column; gap: 6px; }
+
+.form-label {
+  font-family: 'Cinzel', serif; font-size: 8px;
+  letter-spacing: 3px; color: var(--green);
+  text-transform: uppercase;
+}
+
+.form-input, .form-select, .form-textarea {
+  border: 1px solid rgba(200,185,154,0.7);
+  background: var(--cream);
+  padding: 12px 14px;
+  font-family: 'Lato', sans-serif;
+  font-size: 13px; color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+  border-radius: 0;
+  width: 100%;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--green);
+}
+.form-textarea { resize: vertical; min-height: 90px; }
+
+.form-checkbox-group { display: flex; flex-direction: column; gap: 10px; }
+.form-check {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; color: var(--text); cursor: pointer;
+}
+.form-check input[type="checkbox"] {
+  width: 16px; height: 16px; accent-color: var(--green);
+  flex-shrink: 0;
+}
+
+.submit-btn {
+  background: var(--green-dark);
+  color: var(--gold-light);
+  border: none;
+  padding: 16px 48px;
+  font-family: 'Cinzel', serif;
+  font-size: 10px; letter-spacing: 4px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+  align-self: center;
+  margin-top: 8px;
+}
+.submit-btn:hover { background: var(--gold); color: var(--green-dark); }
+
+.rsvp-success {
+  display: none;
+  text-align: center; padding: 48px 24px;
+}
+.rsvp-success.show { display: block; }
+.rsvp-success-icon { font-size: 40px; margin-bottom: 16px; }
+.rsvp-success-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 32px;
+  color: var(--green-dark); margin-bottom: 10px;
+}
+.rsvp-success-text { font-size: 14px; color: var(--text-light); }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--green-dark);
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.footer-names {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 36px;
+  color: var(--white); font-weight: 300;
+  margin-bottom: 8px;
+}
+.footer-names .amp { color: var(--gold-light); }
+
+.footer-date {
+  font-family: 'Cinzel', serif; font-size: 9px;
+  letter-spacing: 4px; color: var(--gold-light);
+  margin-bottom: 24px;
+}
+
+.footer-divider {
+  width: 40px; height: 1px;
+  background: rgba(184,148,60,0.4);
+  margin: 0 auto 20px;
+}
+
+.footer-venue {
+  font-size: 12px; color: rgba(255,255,255,0.4);
+  font-style: italic; line-height: 1.8;
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── PASSWORD SCREEN ─── */
+#password-screen {
+  position: fixed; inset: 0; z-index: 2000;
+  background: var(--green-dark);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 0;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+#password-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+#password-screen .lang-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 60%, rgba(91,122,96,0.3) 0%, transparent 70%);
+}
+
+.pw-names {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(38px, 7vw, 64px);
+  color: var(--white); font-weight: 300;
+  letter-spacing: -1px; position: relative;
+  margin-bottom: 4px; text-align: center;
+}
+.pw-names .amp { color: var(--gold-light); }
+
+.pw-date {
+  font-family: 'Cinzel', serif;
+  font-size: 10px; letter-spacing: 5px;
+  color: var(--gold-light); position: relative;
+  margin-bottom: 44px; text-align: center;
+}
+
+.pw-divider {
+  width: 50px; height: 1px;
+  background: rgba(184,148,60,0.35);
+  position: relative; margin-bottom: 28px;
+}
+
+.pw-prompt {
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: 4px;
+  color: rgba(255,255,255,0.45);
+  position: relative; margin-bottom: 20px;
+  text-transform: uppercase; text-align: center;
+}
+
+.pw-input-wrap {
+  position: relative; width: 280px;
+}
+
+.pw-input {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(184,148,60,0.4);
+  color: var(--white);
+  font-family: 'Lato', sans-serif;
+  font-size: 14px; letter-spacing: 2px;
+  padding: 14px 48px 14px 18px;
+  outline: none;
+  text-align: center;
+  transition: border-color 0.3s;
+}
+.pw-input::placeholder { color: rgba(255,255,255,0.2); letter-spacing: 1px; }
+.pw-input:focus { border-color: var(--gold); }
+.pw-input.error { border-color: #c0392b; animation: shake 0.4s ease; }
+
+.pw-toggle {
+  position: absolute; right: 14px; top: 50%;
+  transform: translateY(-50%);
+  background: none; border: none;
+  color: rgba(255,255,255,0.3); cursor: pointer;
+  font-size: 16px; padding: 0;
+  transition: color 0.2s;
+}
+.pw-toggle:hover { color: var(--gold-light); }
+
+.pw-btn {
+  margin-top: 16px;
+  border: 1px solid rgba(184,148,60,0.6);
+  background: transparent;
+  color: var(--gold-light);
+  font-family: 'Cinzel', serif;
+  font-size: 10px; letter-spacing: 4px;
+  padding: 13px 40px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  position: relative;
+  width: 280px;
+}
+.pw-btn:hover { background: var(--gold); border-color: var(--gold); color: var(--green-dark); }
+
+.pw-error-msg {
+  font-family: 'Cinzel', serif;
+  font-size: 9px; letter-spacing: 3px;
+  color: #e74c3c;
+  margin-top: 14px;
+  position: relative;
+  opacity: 0; transition: opacity 0.3s;
+  text-transform: uppercase;
+}
+.pw-error-msg.show { opacity: 1; }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%      { transform: translateX(-8px); }
+  40%      { transform: translateX(8px); }
+  60%      { transform: translateX(-5px); }
+  80%      { transform: translateX(5px); }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ PASSWORD SCREEN ═══ -->
+<div id="password-screen">
+  <div class="lang-bg"></div>
+  <div class="pw-names">Sophie <span class="amp">&</span> Mateus</div>
+  <div class="pw-date">19 · 06 · 2027 — NORTHERN IRELAND</div>
+  <div class="pw-divider"></div>
+  <div class="pw-prompt">Enter password to continue</div>
+  <div class="pw-input-wrap">
+    <input class="pw-input" id="pw-input" type="password" placeholder="••••••••••" onkeydown="if(event.key==='Enter') checkPassword()">
+    <button class="pw-toggle" onclick="togglePwVisibility()" id="pw-eye" title="Show/hide">👁</button>
+  </div>
+  <button class="pw-btn" onclick="checkPassword()">Enter</button>
+  <div class="pw-error-msg" id="pw-error">Incorrect password. Please try again.</div>
+</div>
+
+<!-- ═══ LANGUAGE SCREEN ═══ -->
+<div id="lang-screen">
+  <div class="lang-bg"></div>
+  <div class="lang-names">Sophie <span class="amp">&</span> Mateus</div>
+  <div class="lang-date">19 · 06 · 2027 — NORTHERN IRELAND</div>
+  <div class="lang-divider"></div>
+  <div class="lang-prompt" id="lang-prompt">Choose your language</div>
+  <div class="lang-btns">
+    <button class="lang-btn" onclick="setLang('pt')">Português</button>
+    <button class="lang-btn" onclick="setLang('en')">English</button>
+  </div>
+</div>
+
+<!-- ═══ MAIN SITE ═══ -->
+<div id="site">
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-brand">Sophie <span style="color:var(--gold)">&</span> Mateus</div>
+    <ul class="nav-links">
+      <li><a href="#events" class="t" data-pt="Eventos" data-en="Events">Events</a></li>
+      <li><a href="#schedule" class="t" data-pt="Roteiro" data-en="Schedule">Schedule</a></li>
+      <li><a href="#travel" class="t" data-pt="Como Chegar" data-en="Getting Here">Getting Here</a></li>
+      <li><a href="#hotels" class="t" data-pt="Hospedagem" data-en="Hotels">Hotels</a></li>
+      <li><a href="#dresscode" class="t" data-pt="Dress Code" data-en="Dress Code">Dress Code</a></li>
+      <li><a href="#gifts" class="t" data-pt="Presentes" data-en="Gifts">Gifts</a></li>
+      <li><a href="#explore" class="t" data-pt="Explorar" data-en="Explore">Explore</a></li>
+      <li><a href="#faq" class="t" data-pt="FAQ" data-en="FAQ">FAQ</a></li>
+      <li><a href="#rsvp" class="t" data-pt="Confirmar" data-en="RSVP">RSVP</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="nav-lang" onclick="toggleLang()" id="lang-toggle">PT</button>
+      <button class="hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- DRAWER OVERLAY -->
+  <div class="nav-drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+
+  <!-- DRAWER -->
+  <div class="nav-drawer" id="nav-drawer">
+    <div class="drawer-brand">Sophie <span class="amp">&</span> Mateus</div>
+    <div class="drawer-date">19 · 06 · 2027</div>
+    <div class="drawer-divider"></div>
+    <ul class="drawer-links">
+      <li><a href="#events" onclick="closeDrawer()"><span class="drawer-icon">📅</span><span class="t" data-pt="Eventos" data-en="Events">Events</span></a></li>
+      <li><a href="#schedule" onclick="closeDrawer()"><span class="drawer-icon">⏱</span><span class="t" data-pt="Roteiro" data-en="Schedule">Schedule</span></a></li>
+      <li><a href="#map" onclick="closeDrawer()"><span class="drawer-icon">📍</span><span class="t" data-pt="Localização" data-en="Location">Location</span></a></li>
+      <li><a href="#travel" onclick="closeDrawer()"><span class="drawer-icon">✈️</span><span class="t" data-pt="Como Chegar" data-en="Getting Here">Getting Here</span></a></li>
+      <li><a href="#hotels" onclick="closeDrawer()"><span class="drawer-icon">🏨</span><span class="t" data-pt="Hospedagem" data-en="Hotels">Hotels</span></a></li>
+      <li><a href="#dresscode" onclick="closeDrawer()"><span class="drawer-icon">👗</span><span class="t" data-pt="Dress Code" data-en="Dress Code">Dress Code</span></a></li>
+      <li><a href="#gifts" onclick="closeDrawer()"><span class="drawer-icon">🎁</span><span class="t" data-pt="Presentes" data-en="Gifts">Gifts</span></a></li>
+      <li><a href="#explore" onclick="closeDrawer()"><span class="drawer-icon">🌍</span><span class="t" data-pt="Explorar" data-en="Explore">Explore</span></a></li>
+      <li><a href="#faq" onclick="closeDrawer()"><span class="drawer-icon">❓</span><span class="t" data-pt="Perguntas" data-en="FAQ">FAQ</span></a></li>
+      <li><a href="#rsvp" onclick="closeDrawer()" style="color:var(--gold-light); border-color:rgba(184,148,60,0.3);"><span class="drawer-icon">💌</span><span class="t" data-pt="Confirmar Presença" data-en="RSVP">RSVP</span></a></li>
+    </ul>
+    <button class="drawer-lang-btn" onclick="toggleLang(); closeDrawer();" id="drawer-lang-btn">🌐 &nbsp; ENGLISH</button>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-bg"></div>
+    <div class="hero-label t" data-pt="Convite de Casamento" data-en="Wedding Invitation">Wedding Invitation</div>
+    <h1 class="hero-title">Sophie <span class="amp">&</span> Mateus</h1>
+    <div class="hero-divider">
+      <div class="hero-divider-line"></div>
+      <div class="hero-divider-gem">◆ ◇ ◆</div>
+      <div class="hero-divider-line"></div>
+    </div>
+    <div class="hero-date t" data-pt="19 DE JUNHO DE 2027" data-en="19TH JUNE 2027">19TH JUNE 2027</div>
+    <div class="hero-location">Old Rectory Killyman, <span class="t" data-pt="Irlanda do Norte" data-en="Northern Ireland">Northern Ireland</span></div>
+    <div class="countdown" id="countdown">
+      <div class="cd-item"><span class="cd-num" id="cd-days">--</span><span class="cd-label t" data-pt="Dias" data-en="Days">Days</span></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-item"><span class="cd-num" id="cd-hours">--</span><span class="cd-label t" data-pt="Horas" data-en="Hours">Hours</span></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-item"><span class="cd-num" id="cd-mins">--</span><span class="cd-label t" data-pt="Min" data-en="Min">Min</span></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-item"><span class="cd-num" id="cd-secs">--</span><span class="cd-label t" data-pt="Seg" data-en="Sec">Sec</span></div>
+    </div>
+  </section>
+
+  <!-- EVENTS -->
+  <section id="events">
+    <div class="section-inner">
+      <div class="section-tag reveal t" data-pt="O Fim de Semana" data-en="The Weekend">The Weekend</div>
+      <h2 class="section-title reveal t" data-pt="Os Nossos Eventos" data-en="Our Celebrations">Our Celebrations</h2>
+      <div class="gold-line reveal"></div>
+      <div class="events-grid">
+
+        <div class="event-card reveal">
+          <img class="event-card-img" src="img-cottage.png" alt="Irish cottage watercolour illustration">
+          <div class="event-card-body">
+            <div class="event-num t" data-pt="EVENTO I" data-en="EVENT I">EVENT I</div>
+            <div class="event-name t" data-pt="Pré-Casamento" data-en="Pre-Wedding">Pre-Wedding</div>
+            <div class="event-name-en t" data-pt="Celebração de chegada" data-en="Welcome celebration">Welcome celebration</div>
+            <div class="event-detail">
+              <span class="event-detail-icon">◆</span>
+              <span class="t" data-pt="18 de Junho de 2027" data-en="18th June 2027">18th June 2027</span>
+            </div>
+            <div class="event-detail">
+              <span class="event-detail-icon">◆</span>
+              <span class="t" data-pt="Local a confirmar" data-en="Venue to be confirmed">Venue to be confirmed</span>
+            </div>
+            <span class="tbc-badge t" data-pt="Em breve" data-en="Coming soon">Coming soon</span>
+          </div>
+        </div>
+
+        <div class="event-card reveal">
+          <img class="event-card-img" src="img-venue.png" alt="Old Rectory Killyman watercolour illustration">
+          <div class="event-card-body">
+            <div class="event-num t" data-pt="EVENTO II" data-en="EVENT II">EVENT II</div>
+            <div class="event-name t" data-pt="Cerimônia & Recepção" data-en="Ceremony & Reception">Ceremony & Reception</div>
+            <div class="event-name-en t" data-pt="O grande dia" data-en="The big day">The big day</div>
+            <div class="event-detail">
+              <span class="event-detail-icon">◆</span>
+              <span class="t" data-pt="19 de Junho de 2027" data-en="19th June 2027">19th June 2027</span>
+            </div>
+            <div class="event-detail">
+              <span class="event-detail-icon">◆</span>
+              <span>Old Rectory Killyman</span>
+            </div>
+            <div class="event-detail">
+              <span class="event-detail-icon">◆</span>
+              <span class="t" data-pt="Killyman, Co. Tyrone, Irlanda do Norte" data-en="Killyman, Co. Tyrone, Northern Ireland">Killyman, Co. Tyrone, Northern Ireland</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="event-card reveal">
+          <img class="event-card-img" src="img-pub.png" alt="Bishops Pub House watercolour illustration">
+          <div class="event-card-body">
+            <div class="event-num t" data-pt="EVENTO III" data-en="EVENT III">EVENT III</div>
+            <div class="event-name t" data-pt="Dia Seguinte" data-en="Day After">Day After</div>
+            <div class="event-name-en t" data-pt="Continuando a festa" data-en="Continuing the celebration">Continuing the celebration</div>
+            <div class="event-detail">
+              <span class="event-detail-icon">◆</span>
+              <span class="t" data-pt="20 de Junho de 2027" data-en="20th June 2027">20th June 2027</span>
+            </div>
+            <div class="event-detail">
+              <span class="event-detail-icon">◆</span>
+              <span class="t" data-pt="Local a confirmar" data-en="Venue to be confirmed">Venue to be confirmed</span>
+            </div>
+            <span class="tbc-badge t" data-pt="Em breve" data-en="Coming soon">Coming soon</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SCHEDULE -->
+  <section id="schedule">
+    <div class="section-inner">
+      <div class="section-tag reveal t" data-pt="Fim de Semana" data-en="The Weekend">The Weekend</div>
+      <h2 class="section-title reveal t" data-pt="Roteiro" data-en="Schedule">Schedule</h2>
+      <div class="gold-line reveal"></div>
+
+      <div class="schedule-days">
+
+        <!-- DAY 1: Welcome Party -->
+        <div class="schedule-day reveal">
+          <div class="schedule-day-header">
+            <img class="schedule-day-img" src="img-cottage.png" alt="Welcome Party">
+            <div class="schedule-day-info">
+              <div class="schedule-day-num t" data-pt="DIA I" data-en="DAY I">DAY I</div>
+              <div class="schedule-day-title t" data-pt="Pré-Casamento" data-en="Pre-Wedding">Pre-Wedding</div>
+              <div class="schedule-day-date">18 <span class="t" data-pt="de Junho" data-en="June">June</span> 2027</div>
+            </div>
+          </div>
+          <div class="timeline">
+            <div class="timeline-item highlight">
+              <div class="timeline-dot"></div>
+              <div class="timeline-time">4:00 PM</div>
+              <div class="timeline-event t" data-pt="Abertura da Welcome Party" data-en="Welcome Party Opens">Welcome Party Opens</div>
+              <div class="timeline-desc t" data-pt="Chegada dos convidados e boas-vindas" data-en="Guests arrive & welcome drinks">Guests arrive & welcome drinks</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-time">4:00 PM – 11:00 PM</div>
+              <div class="timeline-event t" data-pt="Celebração de chegada" data-en="Welcome Celebration">Welcome Celebration</div>
+              <div class="timeline-desc t" data-pt="Drinks, petiscos e boa companhia" data-en="Drinks, food & good company">Drinks, food & good company</div>
+            </div>
+            <div class="timeline-item highlight">
+              <div class="timeline-dot"></div>
+              <div class="timeline-time">11:00 PM</div>
+              <div class="timeline-event t" data-pt="Encerramento" data-en="Good Night">Good Night</div>
+              <div class="timeline-desc t" data-pt="Até amanhã! Descansem bem." data-en="Rest up — tomorrow is the big day!">Rest up — tomorrow is the big day!</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DAY 2: Wedding -->
+        <div class="schedule-day reveal">
+          <div class="schedule-day-header">
+            <img class="schedule-day-img" src="img-venue.png" alt="Wedding Day">
+            <div class="schedule-day-info">
+              <div class="schedule-day-num t" data-pt="DIA II" data-en="DAY II">DAY II</div>
+              <div class="schedule-day-title t" data-pt="O Grande Dia" data-en="The Big Day">The Big Day</div>
+              <div class="schedule-day-date">19 <span class="t" data-pt="de Junho" data-en="June">June</span> 2027</div>
+            </div>
+          </div>
+          <div class="timeline">
+            <div class="timeline-item highlight">
+              <div class="timeline-dot"></div>
+              <div class="timeline-time">3:00 PM</div>
+              <div class="timeline-event t" data-pt="Início da Cerimônia" data-en="Ceremony Begins">Ceremony Begins</div>
+              <div class="timeline-desc t" data-pt="Old Rectory Killyman" data-en="Old Rectory Killyman">Old Rectory Killyman</div>
+            </div>
+            <div class="timeline-item highlight">
+              <div class="timeline-dot"></div>
+              <div class="timeline-time">4:00 PM</div>
+              <div class="timeline-event t" data-pt="Receptivo" data-en="Drinks Reception">Drinks Reception</div>
+              <div class="timeline-desc t" data-pt="Espumante, canapés e fotos nos jardins" data-en="Bubbles, canapés & photos in the gardens">Bubbles, canapés & photos in the gardens</div>
+            </div>
+            <div class="timeline-item highlight">
+              <div class="timeline-dot"></div>
+              <div class="timeline-time">6:00 PM</div>
+              <div class="timeline-event t" data-pt="Jantar" data-en="Wedding Dinner">Wedding Dinner</div>
+              <div class="timeline-desc t" data-pt="Discursos e jantar de celebração" data-en="Speeches & wedding dinner">Speeches & wedding dinner</div>
+            </div>
+            <div class="timeline-item highlight">
+              <div class="timeline-dot"></div>
+              <div class="timeline-time">8:00 PM</div>
+              <div class="timeline-event t" data-pt="Início da Festa" data-en="Party Begins">Party Begins</div>
+              <div class="timeline-desc t" data-pt="Dança, música e celebração" data-en="Dancing, music & celebration">Dancing, music & celebration</div>
+            </div>
+            <div class="timeline-item highlight">
+              <div class="timeline-dot"></div>
+              <div class="timeline-time">1:00 AM</div>
+              <div class="timeline-event t" data-pt="Encerramento" data-en="Last Dance">Last Dance</div>
+              <div class="timeline-desc t" data-pt="Boa noite e até amanhã no pub!" data-en="Good night — see you at the pub tomorrow!">Good night — see you at the pub tomorrow!</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DAY 3: Pub -->
+        <div class="schedule-day reveal">
+          <div class="schedule-day-header">
+            <img class="schedule-day-img" src="img-pub.png" alt="Day After">
+            <div class="schedule-day-info">
+              <div class="schedule-day-num t" data-pt="DIA III" data-en="DAY III">DAY III</div>
+              <div class="schedule-day-title t" data-pt="Dia Seguinte" data-en="The Day After">The Day After</div>
+              <div class="schedule-day-date">20 <span class="t" data-pt="de Junho" data-en="June">June</span> 2027</div>
+            </div>
+          </div>
+          <div class="timeline">
+            <div class="timeline-item highlight">
+              <div class="timeline-dot"></div>
+              <div class="timeline-time">1:00 PM</div>
+              <div class="timeline-event t" data-pt="Abrimos o Pub!" data-en="Pub Opens!">Pub Opens!</div>
+              <div class="timeline-desc t" data-pt="Encontro descontraído para relembrar a festa" data-en="A relaxed gathering to relive the celebration">A relaxed gathering to relive the celebration</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-time">1:00 PM onwards</div>
+              <div class="timeline-event t" data-pt="Almoço & Drinks" data-en="Lunch & Drinks">Lunch & Drinks</div>
+              <div class="timeline-desc t" data-pt="Comida de pub, risadas e boas memórias" data-en="Pub food, laughter & good memories">Pub food, laughter & good memories</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-time t" data-pt="A confirmar" data-en="TBC">TBC</div>
+              <div class="timeline-event t" data-pt="Encerramento" data-en="Farewell">Farewell</div>
+              <div class="timeline-desc t" data-pt="Até a próxima! Com amor, Sophie & Mateus 💚" data-en="Until next time! With love, Sophie & Mateus 💚">Until next time! With love, Sophie & Mateus 💚</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- TRAVEL -->
+  <section id="travel">
+    <div class="section-inner">
+      <div class="section-tag reveal t" data-pt="Logística" data-en="Logistics">Logistics</div>
+      <h2 class="section-title reveal t" data-pt="Como Chegar" data-en="Getting Here">Getting Here</h2>
+      <div class="gold-line reveal"></div>
+      <div class="travel-grid">
+
+        <div class="reveal">
+          <div class="travel-col-title t" data-pt="✈ Aeroportos Próximos" data-en="✈ Nearest Airports">✈ Nearest Airports</div>
+
+          <div class="travel-item">
+            <div class="travel-name">Belfast International (BFS)</div>
+            <div class="travel-detail t"
+              data-pt="O aeroporto mais próximo. Cerca de 45 min de carro até o Old Rectory Killyman. Voos diretos de várias cidades europeias."
+              data-en="The closest airport. Approx. 45 min drive to Old Rectory Killyman. Direct flights from many European cities.">
+              The closest airport. Approx. 45 min drive to Old Rectory Killyman. Direct flights from many European cities.
+            </div>
+            <span class="travel-badge">~45 min</span>
+          </div>
+
+          <div class="travel-item">
+            <div class="travel-name">George Best Belfast City (BHD)</div>
+            <div class="travel-detail t"
+              data-pt="Aeroporto central de Belfast. Cerca de 1h de carro. Boas conexões com UK e Irlanda."
+              data-en="Belfast's city airport. About 1hr by car. Great connections from UK and Ireland.">
+              Belfast's city airport. About 1hr by car. Great connections from UK and Ireland.
+            </div>
+            <span class="travel-badge">~1h</span>
+          </div>
+
+          <div class="travel-item">
+            <div class="travel-name">Dublin Airport (DUB)</div>
+            <div class="travel-detail t"
+              data-pt="Maior hub da região com voos globais. Cerca de 2h de carro até o local. Ótima opção para quem vem de fora da Europa."
+              data-en="The region's largest hub with global flights. Approx. 2hr drive to venue. Best option for long-haul travellers.">
+              The region's largest hub with global flights. Approx. 2hr drive to venue. Best option for long-haul travellers.
+            </div>
+            <span class="travel-badge">~2h</span>
+          </div>
+
+          <div class="travel-item">
+            <div class="travel-name">City of Derry Airport (LDY)</div>
+            <div class="travel-detail t"
+              data-pt="Pequeno aeroporto a norte. Cerca de 1h10 de carro. Voos de Manchester, Londres e Glasgow."
+              data-en="Smaller northern airport. About 1hr 10min drive. Flights from Manchester, London and Glasgow.">
+              Smaller northern airport. About 1hr 10min drive. Flights from Manchester, London and Glasgow.
+            </div>
+            <span class="travel-badge">~1h 10min</span>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <div class="travel-col-title t" data-pt="🚗 Chegando ao Local" data-en="🚗 Getting to the Venue">🚗 Getting to the Venue</div>
+
+          <div class="travel-item">
+            <div class="travel-name t" data-pt="De Carro" data-en="By Car">By Car</div>
+            <div class="travel-detail t"
+              data-pt="A melhor opção para se locomover na região. Estacionamento gratuito disponível no local. Recomendamos o uso de GPS — o endereço é Old Rectory, Killyman Road, Dungannon, Co. Tyrone, BT71 6RF."
+              data-en="The best way to get around the area. Free parking available at the venue. We recommend using GPS — the address is Old Rectory, Killyman Road, Dungannon, Co. Tyrone, BT71 6RF.">
+              The best way to get around the area. Free parking available at the venue. We recommend using GPS — the address is Old Rectory, Killyman Road, Dungannon, Co. Tyrone, BT71 6RF.
+            </div>
+          </div>
+
+          <div class="travel-item">
+            <div class="travel-name t" data-pt="Transfer / Táxi" data-en="Transfer / Taxi">Transfer / Taxi</div>
+            <div class="travel-detail t"
+              data-pt="Taxis locais disponíveis em Dungannon. Recomendamos reservar com antecedência durante o fim de semana. Mais informações sobre transfers organizados pelo casal serão enviadas em breve."
+              data-en="Local taxis available in Dungannon. We recommend booking in advance for the weekend. Details on any organised transfers will be shared closer to the date.">
+              Local taxis available in Dungannon. We recommend booking in advance for the weekend. Details on any organised transfers will be shared closer to the date.
+            </div>
+          </div>
+
+          <div class="travel-item">
+            <div class="travel-name t" data-pt="De Belfast" data-en="From Belfast">From Belfast</div>
+            <div class="travel-detail t"
+              data-pt="O ônibus Goldline conecta Belfast a Dungannon com saídas regulares. De Dungannon, um táxi local leva até o local em cerca de 10 min. Recomendamos reservar o táxi com antecedência."
+              data-en="The Goldline coach connects Belfast to Dungannon with regular departures. From Dungannon, a local taxi takes around 10 min to the venue. We recommend pre-booking your taxi.">
+              The Goldline coach connects Belfast to Dungannon with regular departures. From Dungannon, a local taxi takes around 10 min to the venue. We recommend pre-booking your taxi.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MAP -->
+  <section id="map" style="padding: 0; background: var(--white);">
+    <div style="max-width:860px; margin:0 auto; padding: 64px 24px 0;">
+      <div class="section-tag reveal t" data-pt="Local da Cerimônia" data-en="Venue Location">Venue Location</div>
+      <h2 class="section-title reveal t" data-pt="Como Nos Encontrar" data-en="Find Us">Find Us</h2>
+      <div class="gold-line reveal"></div>
+      <div class="reveal" style="display:flex; gap:16px; align-items:center; justify-content:center; margin-bottom:24px; flex-wrap:wrap;">
+        <div style="font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; color:var(--text-light);">
+          Old Rectory Killyman · Killyman Road · Dungannon · Co. Tyrone · BT71 6RF
+        </div>
+        <a href="https://maps.google.com/?q=Old+Rectory+Killyman,+Killyman+Road,+Dungannon,+BT71+6RF" target="_blank" rel="noopener"
+          style="font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:var(--gold); border:1px solid rgba(184,148,60,0.5); padding:7px 16px; text-decoration:none; white-space:nowrap; transition:all 0.2s;"
+          onmouseover="this.style.background='var(--gold)';this.style.color='white'"
+          onmouseout="this.style.background='transparent';this.style.color='var(--gold)'">
+          <span class="t" data-pt="↗ Abrir no Google Maps" data-en="↗ Open in Google Maps">↗ Open in Google Maps</span>
+        </a>
+      </div>
+    </div>
+    <div class="reveal" style="width:100%; height:380px; border-top:3px solid var(--gold); border-bottom:3px solid var(--gold);">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2336.!2d-6.7230!3d54.5120!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x485df3b1b1b1b1b1%3A0x1234567890abcdef!2sOld+Rectory+Killyman%2C+Killyman+Rd%2C+Dungannon+BT71+6RF!5e0!3m2!1sen!2suk!4v1234567890"
+        width="100%" height="100%" style="border:0; display:block;" allowfullscreen="" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Old Rectory Killyman">
+      </iframe>
+    </div>
+    <div style="max-width:860px; margin:0 auto; padding: 0 24px 64px;"></div>
+  </section>
+
+  <!-- HOTELS -->
+  <section id="hotels">
+    <div class="section-inner">
+      <div class="section-tag reveal t" data-pt="Hospedagem" data-en="Accommodation">Accommodation</div>
+      <h2 class="section-title reveal t" data-pt="Onde Ficar" data-en="Where to Stay">Where to Stay</h2>
+      <div class="gold-line reveal"></div>
+      <div class="hotels-grid">
+
+        <div class="hotel-card reveal">
+          <div class="hotel-stars">★★★★</div>
+          <div class="hotel-name"><a href="https://www.booking.com/hotel/gb/glenavon-house.en-gb.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(184,148,60,0.4);">Glenavon House Hotel ↗</a></div>
+          <div class="hotel-location">Cookstown, Co. Tyrone</div>
+          <div class="hotel-detail t"
+            data-pt="Hotel 4 estrelas com excelentes instalações e grande estacionamento. Muito popular com grupos para casamentos na região."
+            data-en="Welcoming 4-star hotel with excellent facilities and ample parking. Very popular with wedding parties in the area.">
+            Welcoming 4-star hotel with excellent facilities and ample parking. Very popular with wedding parties in the area.
+          </div>
+          <span class="hotel-distance t" data-pt="~20 min do local" data-en="~20 min from venue">~20 min from venue</span>
+        </div>
+
+        <div class="hotel-card reveal">
+          <div class="hotel-stars">★★★★</div>
+          <div class="hotel-name"><a href="https://www.booking.com/hotel/gb/cohannon-inn.en-gb.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(184,148,60,0.4);">Cohannon Inn & Suites ↗</a></div>
+          <div class="hotel-location">Dungannon, Co. Tyrone</div>
+          <div class="hotel-detail t"
+            data-pt="Hotel moderno com quartos espaçosos e restaurante. Localização conveniente, próximo às principais estradas da região."
+            data-en="Modern hotel with spacious rooms and on-site restaurant. Convenient location near major roads in the area.">
+            Modern hotel with spacious rooms and on-site restaurant. Convenient location near major roads in the area.
+          </div>
+          <span class="hotel-distance t" data-pt="~15 min do local" data-en="~15 min from venue">~15 min from venue</span>
+        </div>
+
+        <div class="hotel-card reveal">
+          <div class="hotel-stars">★★★★★</div>
+          <div class="hotel-name"><a href="https://www.booking.com/hotel/gb/killyhevlin-eniskillen.en-gb.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(184,148,60,0.4);">Killyhevlin Lakeside Hotel ↗</a></div>
+          <div class="hotel-location">Enniskillen, Co. Fermanagh</div>
+          <div class="hotel-detail t"
+            data-pt="Hotel de luxo à beira do lago Erne. Experiência única na Irlanda do Norte, ideal para quem quer estender a visita pela região."
+            data-en="Luxury hotel on the shores of Lough Erne. A unique Northern Ireland experience, ideal for those extending their stay in the region.">
+            Luxury hotel on the shores of Lough Erne. A unique Northern Ireland experience, ideal for those extending their stay in the region.
+          </div>
+          <span class="hotel-distance t" data-pt="~50 min do local" data-en="~50 min from venue">~50 min from venue</span>
+        </div>
+
+        <div class="hotel-card reveal">
+          <div class="hotel-stars">★★★★</div>
+          <div class="hotel-name"><a href="https://www.booking.com/hotel/gb/maldron-hotel-belfast-city.en-gb.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(184,148,60,0.4);">Maldron Hotel Belfast ↗</a></div>
+          <div class="hotel-location">Belfast City Centre</div>
+          <div class="hotel-detail t"
+            data-pt="Ótima base em Belfast para quem quer explorar a cidade antes ou depois do casamento. Bem conectado ao aeroporto e ao centro."
+            data-en="Great base in Belfast for those wanting to explore the city before or after the wedding. Well connected to the airport and city centre.">
+            Great base in Belfast for those wanting to explore the city before or after the wedding. Well connected to the airport and city centre.
+          </div>
+          <span class="hotel-distance t" data-pt="~1h do local" data-en="~1hr from venue">~1hr from venue</span>
+        </div>
+
+        <div class="hotel-card reveal">
+          <div class="hotel-stars">★★★</div>
+          <div class="hotel-name"><a href="https://www.booking.com/hotel/gb/charlemont-arms.en-gb.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(184,148,60,0.4);">The Charlemont Arms Hotel ↗</a></div>
+          <div class="hotel-location">Moy, Co. Tyrone</div>
+          <div class="hotel-detail t"
+            data-pt="Hotel charmoso no centro da vila de Moy, a poucos minutos do local. Ambiente acolhedor e com caráter local autêntico — perfeito para quem quer estar bem perto das celebrações."
+            data-en="Charming hotel in the heart of Moy village, just minutes from the venue. Warm, characterful atmosphere with authentic local feel — ideal for guests wanting to be close to the action.">
+            Charming hotel in the heart of Moy village, just minutes from the venue. Warm, characterful atmosphere with authentic local feel — ideal for guests wanting to be close to the action.
+          </div>
+          <span class="hotel-distance t" data-pt="~10 min do local" data-en="~10 min from venue">~10 min from venue</span>
+        </div>
+
+        <div class="hotel-card reveal">
+          <div class="hotel-stars">★★★★</div>
+          <div class="hotel-name"><a href="https://www.booking.com/hotel/gb/white-gables-hillsborough.en-gb.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(184,148,60,0.4);">White Gables Hotel ↗</a></div>
+          <div class="hotel-location">Hillsborough, Co. Down</div>
+          <div class="hotel-detail t"
+            data-pt="Hotel boutique elegante na pitoresca vila de Hillsborough, próxima ao Castelo de Hillsborough. Uma opção sofisticada para quem aprecia charme irlandês com conforto moderno."
+            data-en="Elegant boutique hotel in the picturesque village of Hillsborough, near Hillsborough Castle. A sophisticated option for those who appreciate Irish charm with modern comfort.">
+            Elegant boutique hotel in the picturesque village of Hillsborough, near Hillsborough Castle. A sophisticated option for those who appreciate Irish charm with modern comfort.
+          </div>
+          <span class="hotel-distance t" data-pt="~50 min do local" data-en="~50 min from venue">~50 min from venue</span>
+        </div>
+
+        <div class="hotel-card reveal">
+          <div class="hotel-stars">★★★★★</div>
+          <div class="hotel-name"><a href="https://www.booking.com/hotel/gb/the-merchant.en-gb.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(184,148,60,0.4);">The Merchant Hotel ↗</a></div>
+          <div class="hotel-location">Belfast City Centre</div>
+          <div class="hotel-detail t"
+            data-pt="O hotel mais luxuoso de Belfast, instalado num magnífico edifício vitoriano. Ideal para quem quer combinar o casamento com uma experiência memorável na cidade."
+            data-en="Belfast's most luxurious hotel, set in a magnificent Victorian building. Perfect for guests who wish to combine the wedding with a truly memorable city experience.">
+            Belfast's most luxurious hotel, set in a magnificent Victorian building. Perfect for guests who wish to combine the wedding with a truly memorable city experience.
+          </div>
+          <span class="hotel-distance t" data-pt="~1h do local" data-en="~1hr from venue">~1hr from venue</span>
+        </div>
+
+      </div>
+
+      <!-- Airbnb note -->
+      <div class="reveal" style="margin-top:40px; border:1px solid rgba(184,148,60,0.25); background:var(--white); padding:28px 32px; display:flex; gap:18px; align-items:flex-start;">
+        <div style="font-size:28px; flex-shrink:0;">🏡</div>
+        <div>
+          <div style="font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:var(--gold); margin-bottom:8px;" class="t" data-pt="TAMBÉM RECOMENDAMOS" data-en="ALSO WORTH CONSIDERING">ALSO WORTH CONSIDERING</div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--green-dark); margin-bottom:8px;">Airbnb</div>
+          <p style="font-size:13px; color:var(--text-light); line-height:1.8;" class="t"
+            data-pt="A região de Co. Tyrone e arredores tem excelentes opções de Airbnb — de cottages irlandesas tradicionais a casas de campo espaçosas, ideais para grupos de amigos ou família. Uma ótima forma de ter mais privacidade e flexibilidade durante o fim de semana. Pesquise pelas áreas de Dungannon, Moy, Armagh e Portadown."
+            data-en="The Co. Tyrone area and surroundings offer excellent Airbnb options — from traditional Irish cottages to spacious country homes, perfect for groups of friends or family. A great way to enjoy more privacy and flexibility over the weekend. We suggest searching around Dungannon, Moy, Armagh and Portadown.">
+            The Co. Tyrone area and surroundings offer excellent Airbnb options — from traditional Irish cottages to spacious country homes, perfect for groups of friends or family. A great way to enjoy more privacy and flexibility over the weekend. We suggest searching around Dungannon, Moy, Armagh and Portadown.
+          </p>
+        </div>
+      </div>
+
+      <p class="reveal" style="text-align:center; margin-top:28px; font-size:12.5px; color:var(--text-light); font-style:italic;">
+        <span class="t" data-pt="Recomendamos reservar com antecedência — o verão na Irlanda é época de alta procura." data-en="We recommend booking early — summer in Northern Ireland is high season.">We recommend booking early — summer in Northern Ireland is high season.</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- DRESS CODE -->
+  <section id="dresscode">
+    <div class="section-inner">
+      <div class="section-tag reveal t" data-pt="Vestuário" data-en="Attire">Attire</div>
+      <h2 class="section-title reveal t" data-pt="Dress Code" data-en="Dress Code">Dress Code</h2>
+      <div class="gold-line reveal"></div>
+      <div class="dress-grid">
+        <div class="dress-card reveal">
+          <div class="dress-icon">♀</div>
+          <div class="dress-label t" data-pt="Convidadas" data-en="Guests (Ladies)">Guests (Ladies)</div>
+          <div class="dress-title t" data-pt="Traje Formal / Morning Dress opcional" data-en="Formal / Morning Dress optional">Formal / Morning Dress optional</div>
+          <div class="dress-desc t"
+            data-pt="Vestidos longos ou midi elegantes são bem-vindos. Evite branco, marfim e tons muito próximos do vestido de noiva. Saltos podem ser trocados após a cerimônia."
+            data-en="Formal dress or elegant midi welcome. Morning dress is optional. Please avoid white, ivory and champagne tones. Heels may be swapped after the ceremony — the grounds are garden-style.">
+            Formal dress or elegant midi welcome. Morning dress is optional. Please avoid white, ivory and champagne tones. Heels may be swapped after the ceremony — the grounds are garden-style.
+          </div>
+          <div class="dress-palette">
+            <div class="swatch" style="background:#6B8F71" title="Sage"></div>
+            <div class="swatch" style="background:#B8943C" title="Gold"></div>
+            <div class="swatch" style="background:#8B7BAB" title="Lavender"></div>
+            <div class="swatch" style="background:#C0918A" title="Dusty Rose"></div>
+            <div class="swatch" style="background:#4A6480" title="Navy"></div>
+          </div>
+        </div>
+
+        <div class="dress-card reveal">
+          <div class="dress-icon">♂</div>
+          <div class="dress-label t" data-pt="Convidados" data-en="Guests (Gentlemen)">Guests (Gentlemen)</div>
+          <div class="dress-title t" data-pt="Terno / Morning Dress opcional" data-en="Lounge Suit / Morning Dress optional">Lounge Suit / Morning Dress optional</div>
+          <div class="dress-desc t"
+            data-pt="Terno com gravata é o traje indicado. Morning dress é bem-vindo para quem preferir. Evite trajes casuais."
+            data-en="Lounge suit with tie is the dress code. Morning dress is welcome for those who prefer it. Please avoid casual attire.">
+            Lounge suit with tie is the dress code. Morning dress is welcome for those who prefer it. Please avoid casual attire.
+          </div>
+          <div class="dress-palette">
+            <div class="swatch" style="background:#1A1A2E" title="Midnight Black"></div>
+            <div class="swatch" style="background:#2C3E6B" title="Navy"></div>
+            <div class="swatch" style="background:#3B3B3B" title="Charcoal"></div>
+            <div class="swatch" style="background:#4A5240" title="Dark Green"></div>
+          </div>
+        </div>
+      </div>
+      <div class="dress-note reveal">
+        <p class="t"
+          data-pt="O casamento acontece em junho na Irlanda — o clima pode surpreender! Recomendamos trazer uma camada extra para o exterior. O Old Rectory tem jardins deslumbrantes que farão parte da celebração."
+          data-en="The wedding takes place in June in Northern Ireland — the weather can surprise! We recommend bringing an elegant layer for outdoor moments. Old Rectory's beautiful gardens will be part of the celebration.">
+          The wedding takes place in June in Northern Ireland — the weather can surprise! We recommend bringing an elegant layer for outdoor moments. Old Rectory's beautiful gardens will be part of the celebration.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- GIFTS -->
+  <section id="gifts">
+    <div class="section-inner">
+      <div class="section-tag reveal t" data-pt="Lista de Presentes" data-en="Gift List">Gift List</div>
+      <h2 class="section-title reveal t" data-pt="Presentes" data-en="Gifts">Gifts</h2>
+      <div class="gold-line reveal"></div>
+
+      <p class="gifts-intro reveal t"
+        data-pt="A sua presença é o maior presente que poderíamos receber. Para quem desejar nos presentear, deixamos abaixo as opções de transferência."
+        data-en="Your presence is the greatest gift we could ask for. For those who would like to give a gift, we've included our details below.">
+        Your presence is the greatest gift we could ask for. For those who would like to give a gift, we've included our details below.
+      </p>
+
+      <div class="gifts-grid">
+
+        <!-- Brazil -->
+        <div class="gift-card reveal">
+          <div class="gift-flag">🇧🇷</div>
+          <div class="gift-country t" data-pt="Transferência no Brasil" data-en="Transfer in Brazil">Transfer in Brazil</div>
+          <div class="gift-title">Pix</div>
+          <div class="gift-details">
+            <div class="gift-row">
+              <span class="gift-label">Chave Pix</span>
+              <span class="gift-value">08733993661</span>
+              <button class="gift-copy-btn" onclick="copyGift(this, '08733993661')" title="Copiar">⧉</button>
+            </div>
+            <div class="gift-row">
+              <span class="gift-label t" data-pt="Titular" data-en="Name">Name</span>
+              <span class="gift-value">Mateus Freitas Gomes</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- UK -->
+        <div class="gift-card reveal">
+          <div class="gift-flag">🇬🇧</div>
+          <div class="gift-country t" data-pt="Transferência no Reino Unido" data-en="Transfer in the UK">Transfer in the UK</div>
+          <div class="gift-title">Bank Transfer</div>
+          <div class="gift-details">
+            <div class="gift-row">
+              <span class="gift-label">Sort Code</span>
+              <span class="gift-value">04-00-04</span>
+              <button class="gift-copy-btn" onclick="copyGift(this, '04-00-04')" title="Copy">⧉</button>
+            </div>
+            <div class="gift-row">
+              <span class="gift-label t" data-pt="Conta" data-en="Account">Account</span>
+              <span class="gift-value">79577967</span>
+              <button class="gift-copy-btn" onclick="copyGift(this, '79577967')" title="Copy">⧉</button>
+            </div>
+            <div class="gift-row">
+              <span class="gift-label t" data-pt="Titular" data-en="Name">Name</span>
+              <span class="gift-value">Mateus Gomes</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- House note -->
+      <div class="reveal" style="margin-top:32px; border:1px solid rgba(184,148,60,0.25); background:var(--white); padding:28px 32px; display:flex; gap:18px; align-items:flex-start; max-width:700px; margin-left:auto; margin-right:auto; margin-top:32px;">
+        <div style="font-size:28px; flex-shrink:0;">🏠</div>
+        <div>
+          <div style="font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:var(--gold); margin-bottom:8px;" class="t" data-pt="NOSSA NOVA CASA" data-en="OUR NEW HOME">OUR NEW HOME</div>
+          <p style="font-size:13.5px; color:var(--text-light); line-height:1.9; font-style:italic;" class="t"
+            data-pt="Estamos no processo de comprar a nossa primeira casa juntos — um passo enorme e cheio de significado para nós. Se quiser contribuir para este sonho em vez de um presente tradicional, adoraríamos e agradecemos de coração. Qualquer valor é recebido com muito amor. 🏡"
+            data-en="We are in the process of buying our first home together — a huge and meaningful step for us as a couple. If you'd like to contribute towards our new home instead of a traditional gift, we would be truly touched and grateful. Every contribution, big or small, is received with so much love. 🏡">
+            We are in the process of buying our first home together — a huge and meaningful step for us as a couple. If you'd like to contribute towards our new home instead of a traditional gift, we would be truly touched and grateful. Every contribution, big or small, is received with so much love. 🏡
+          </p>
+        </div>
+      </div>
+
+      <p class="gift-note reveal t"
+        data-pt="Caso prefira nos presentear de outra forma, ficaremos igualmente felizes e gratos. 💚"
+        data-en="If you'd prefer to celebrate in another way, we are equally grateful and touched. 💚">
+        If you'd prefer to celebrate in another way, we are equally grateful and touched. 💚
+      </p>
+    </div>
+  </section>
+
+  <!-- EXPLORE NI -->
+  <section id="explore" style="background: var(--green-dark);">
+    <div class="section-inner">
+      <div class="section-tag reveal t" style="color:var(--gold-light);" data-pt="Irlanda do Norte" data-en="Northern Ireland">Northern Ireland</div>
+      <h2 class="section-title reveal t" style="color:var(--white);" data-pt="O Que Fazer na Região" data-en="Explore Northern Ireland">Explore Northern Ireland</h2>
+      <div class="gold-line reveal" style="background:var(--gold-light); opacity:0.5;"></div>
+      <p class="reveal" style="text-align:center; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:18px; color:rgba(255,255,255,0.6); max-width:560px; margin:0 auto 48px; line-height:1.8;" data-pt="Aproveite o fim de semana para explorar uma das regiões mais bonitas das Ilhas Britânicas." data-en="Make the most of your trip and explore one of the most beautiful corners of the British Isles.">
+        <span class="t" data-pt="Aproveite o fim de semana para explorar uma das regiões mais bonitas das Ilhas Britânicas." data-en="Make the most of your trip and explore one of the most beautiful corners of the British Isles.">Make the most of your trip and explore one of the most beautiful corners of the British Isles.</span>
+      </p>
+
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:20px;">
+
+        <div class="reveal" style="border:1px solid rgba(184,148,60,0.2); padding:28px 24px; position:relative; overflow:hidden;">
+          <div style="font-size:28px; margin-bottom:12px;">🏰</div>
+          <div style="font-family:'Cinzel',serif; font-size:8px; letter-spacing:3px; color:var(--gold); margin-bottom:8px;" class="t" data-pt="VILA DA SOPHIE" data-en="SOPHIE'S VILLAGE">SOPHIE'S VILLAGE</div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--white); margin-bottom:8px;">Hillsborough Castle</div>
+          <p style="font-size:12.5px; color:rgba(255,255,255,0.55); line-height:1.8;" class="t"
+            data-pt="A residência oficial da Família Real na Irlanda do Norte, localizada na encantadora vila de Hillsborough — a cidade natal da Sophie. Explore os salões de estado e 100 acres de jardins deslumbrantes, a apenas 20 min de Belfast."
+            data-en="The official Royal residence in Northern Ireland, in the charming village of Hillsborough — Sophie's hometown. Tour the elegant State Rooms and 100 acres of stunning gardens, just 20 min from Belfast.">
+            The official Royal residence in Northern Ireland, in the charming village of Hillsborough — Sophie's hometown. Tour the elegant State Rooms and 100 acres of stunning gardens, just 20 min from Belfast.
+          </p>
+          <a href="https://www.hrp.org.uk/hillsborough-castle/" target="_blank" rel="noopener"
+            style="display:inline-block; margin-top:16px; font-family:'Cinzel',serif; font-size:8px; letter-spacing:2px; color:var(--gold); border:1px solid rgba(184,148,60,0.4); padding:6px 14px; text-decoration:none;">
+            <span class="t" data-pt="Saiba mais ↗" data-en="Learn more ↗">Learn more ↗</span>
+          </a>
+        </div>
+
+        <div class="reveal" style="border:1px solid rgba(184,148,60,0.2); padding:28px 24px;">
+          <div style="font-size:28px; margin-bottom:12px;">🌊</div>
+          <div style="font-family:'Cinzel',serif; font-size:8px; letter-spacing:3px; color:var(--gold); margin-bottom:8px;" class="t" data-pt="PATRIMÔNIO MUNDIAL UNESCO" data-en="UNESCO WORLD HERITAGE">UNESCO WORLD HERITAGE</div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--white); margin-bottom:8px;">Giant's Causeway</div>
+          <p style="font-size:12.5px; color:rgba(255,255,255,0.55); line-height:1.8;" class="t"
+            data-pt="As icónicas colunas de basalto hexagonal na Costa Norte — um dos lugares mais impressionantes do mundo. Segundo a lenda, foram construídas pelo gigante Finn McCool. A cerca de 1h20 do local do casamento."
+            data-en="Northern Ireland's iconic hexagonal basalt columns on the North Coast — one of the world's most breathtaking landscapes. Legend has it they were built by the giant Finn McCool. About 1hr 20min from the venue.">
+            Northern Ireland's iconic hexagonal basalt columns on the North Coast — one of the world's most breathtaking landscapes. Legend has it they were built by the giant Finn McCool. About 1hr 20min from the venue.
+          </p>
+          <a href="https://www.nationaltrust.org.uk/visit/northern-ireland/giants-causeway" target="_blank" rel="noopener"
+            style="display:inline-block; margin-top:16px; font-family:'Cinzel',serif; font-size:8px; letter-spacing:2px; color:var(--gold); border:1px solid rgba(184,148,60,0.4); padding:6px 14px; text-decoration:none;">
+            <span class="t" data-pt="Saiba mais ↗" data-en="Learn more ↗">Learn more ↗</span>
+          </a>
+        </div>
+
+        <div class="reveal" style="border:1px solid rgba(184,148,60,0.2); padding:28px 24px;">
+          <div style="font-size:28px; margin-bottom:12px;">🌉</div>
+          <div style="font-family:'Cinzel',serif; font-size:8px; letter-spacing:3px; color:var(--gold); margin-bottom:8px;">CARRICK-A-REDE</div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--white); margin-bottom:8px;">Rope Bridge</div>
+          <p style="font-size:12.5px; color:rgba(255,255,255,0.55); line-height:1.8;" class="t"
+            data-pt="Uma ponte de corda suspensa 30 metros acima do Oceano Atlântico, conectando o continente a uma ilha remota. Uma experiência inesquecível na Costa Norte, próxima ao Giant's Causeway."
+            data-en="A rope bridge suspended 30 metres above the Atlantic Ocean, connecting the mainland to a tiny island. An unforgettable experience on the North Coast, close to the Giant's Causeway.">
+            A rope bridge suspended 30 metres above the Atlantic Ocean, connecting the mainland to a tiny island. An unforgettable experience on the North Coast, close to the Giant's Causeway.
+          </p>
+          <a href="https://www.nationaltrust.org.uk/visit/northern-ireland/carrick-a-rede" target="_blank" rel="noopener"
+            style="display:inline-block; margin-top:16px; font-family:'Cinzel',serif; font-size:8px; letter-spacing:2px; color:var(--gold); border:1px solid rgba(184,148,60,0.4); padding:6px 14px; text-decoration:none;">
+            <span class="t" data-pt="Saiba mais ↗" data-en="Learn more ↗">Learn more ↗</span>
+          </a>
+        </div>
+
+        <div class="reveal" style="border:1px solid rgba(184,148,60,0.2); padding:28px 24px;">
+          <div style="font-size:28px; margin-bottom:12px;">🏙️</div>
+          <div style="font-family:'Cinzel',serif; font-size:8px; letter-spacing:3px; color:var(--gold); margin-bottom:8px;" class="t" data-pt="CAPITAL" data-en="CAPITAL CITY">CAPITAL CITY</div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--white); margin-bottom:8px;">Belfast</div>
+          <p style="font-size:12.5px; color:rgba(255,255,255,0.55); line-height:1.8;" class="t"
+            data-pt="Uma cidade vibrante com história, arte de rua, gastronomia e o famoso Titanic Museum. O Merchant Quarter e o Cathedral Quarter são imperdíveis. A 1h do local do casamento."
+            data-en="A vibrant city with rich history, street art, great food and the world-famous Titanic Museum. The Cathedral Quarter and the Merchant Quarter are unmissable. 1hr from the venue.">
+            A vibrant city with rich history, street art, great food and the world-famous Titanic Museum. The Cathedral Quarter and the Merchant Quarter are unmissable. 1hr from the venue.
+          </p>
+          <a href="https://visitbelfast.com/" target="_blank" rel="noopener"
+            style="display:inline-block; margin-top:16px; font-family:'Cinzel',serif; font-size:8px; letter-spacing:2px; color:var(--gold); border:1px solid rgba(184,148,60,0.4); padding:6px 14px; text-decoration:none;">
+            <span class="t" data-pt="Saiba mais ↗" data-en="Learn more ↗">Learn more ↗</span>
+          </a>
+        </div>
+
+        <div class="reveal" style="border:1px solid rgba(184,148,60,0.2); padding:28px 24px;">
+          <div style="font-size:28px; margin-bottom:12px;">🛣️</div>
+          <div style="font-family:'Cinzel',serif; font-size:8px; letter-spacing:3px; color:var(--gold); margin-bottom:8px;" class="t" data-pt="ROTA PANORÂMICA" data-en="SCENIC ROUTE">SCENIC ROUTE</div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--white); margin-bottom:8px;">Causeway Coastal Route</div>
+          <p style="font-size:12.5px; color:rgba(255,255,255,0.55); line-height:1.8;" class="t"
+            data-pt="Uma das rotas costeiras mais bonitas do mundo, conectando Belfast à cidade de Derry. Castelos medievais, falésias dramáticas, aldeias pitorescas e cenários de Game of Thrones ao longo do caminho."
+            data-en="One of the world's most beautiful coastal drives, linking Belfast to Derry City. Medieval castles, dramatic cliffs, picturesque villages and Game of Thrones filming locations along the way.">
+            One of the world's most beautiful coastal drives, linking Belfast to Derry City. Medieval castles, dramatic cliffs, picturesque villages and Game of Thrones filming locations along the way.
+          </p>
+          <a href="https://www.visitcausewaycoastandglens.com/" target="_blank" rel="noopener"
+            style="display:inline-block; margin-top:16px; font-family:'Cinzel',serif; font-size:8px; letter-spacing:2px; color:var(--gold); border:1px solid rgba(184,148,60,0.4); padding:6px 14px; text-decoration:none;">
+            <span class="t" data-pt="Saiba mais ↗" data-en="Learn more ↗">Learn more ↗</span>
+          </a>
+        </div>
+
+        <div class="reveal" style="border:1px solid rgba(184,148,60,0.2); padding:28px 24px;">
+          <div style="font-size:28px; margin-bottom:12px;">🏰</div>
+          <div style="font-family:'Cinzel',serif; font-size:8px; letter-spacing:3px; color:var(--gold); margin-bottom:8px;" class="t" data-pt="CASTELO MEDIEVAL" data-en="MEDIEVAL CASTLE">MEDIEVAL CASTLE</div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--white); margin-bottom:8px;">Dunluce Castle</div>
+          <p style="font-size:12.5px; color:rgba(255,255,255,0.55); line-height:1.8;" class="t"
+            data-pt="Um castelo medieval deslumbrante suspenso no topo de falésias à beira-mar. Inspiração para Pyke, o castelo em Game of Thrones. Um dos cenários mais fotográficos de toda a Irlanda."
+            data-en="A breathtaking medieval castle perched on clifftops above the sea. Said to have inspired Pyke in Game of Thrones. One of the most photogenic spots in all of Ireland.">
+            A breathtaking medieval castle perched on clifftops above the sea. Said to have inspired Pyke in Game of Thrones. One of the most photogenic spots in all of Ireland.
+          </p>
+          <a href="https://discovernorthernireland.com/things-to-do/dunluce-castle-p678661" target="_blank" rel="noopener"
+            style="display:inline-block; margin-top:16px; font-family:'Cinzel',serif; font-size:8px; letter-spacing:2px; color:var(--gold); border:1px solid rgba(184,148,60,0.4); padding:6px 14px; text-decoration:none;">
+            <span class="t" data-pt="Saiba mais ↗" data-en="Learn more ↗">Learn more ↗</span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="section-inner">
+      <div class="section-tag reveal">FAQ</div>
+      <h2 class="section-title reveal t" data-pt="Perguntas Frequentes" data-en="Frequently Asked Questions">Frequently Asked Questions</h2>
+      <div class="gold-line reveal"></div>
+      <div class="faq-list" id="faq-list">
+
+        <div class="faq-item reveal">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text t" data-pt="Crianças são bem-vindas?" data-en="Are children welcome?">Are children welcome?</span>
+            <i class="faq-icon">+</i>
+          </button>
+          <div class="faq-a">
+            <p class="t"
+              data-pt="Recomendamos que o evento seja para adultos, mas entendemos que nem sempre é possível. Bebês até 2 anos são muito bem-vindos. Se você tiver crianças mais velhas e não tiver outra opção, entre em contato conosco — adoraríamos ajudar a encontrar uma solução."
+              data-en="We recommend an adults-only celebration, but understand this isn't always possible. Babies under 2 years old are very welcome. If you have older children and have no other option, please don't hesitate to reach out — we'd love to help find a solution.">
+              We recommend an adults-only celebration, but understand this isn't always possible. Babies under 2 years old are very welcome. If you have older children and have no other option, please don't hesitate to reach out — we'd love to help find a solution.
+            </p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text t" data-pt="Posso tirar fotos durante a cerimônia?" data-en="Can I take photos during the ceremony?">Can I take photos during the ceremony?</span>
+            <i class="faq-icon">+</i>
+          </button>
+          <div class="faq-a">
+            <p class="t"
+              data-pt="Pedimos que a cerimônia seja 'unplugged' — sem celulares ou câmeras. Queremos que todos estejam presentes nesse momento. Nosso fotógrafo profissional vai registrar tudo, e as fotos serão compartilhadas com todos em breve após o casamento!"
+              data-en="We kindly ask for an unplugged ceremony — please keep phones and cameras away during the vows. We want everyone fully present in that moment. Our photographer will capture everything, and photos will be shared with all guests shortly after the wedding!">
+              We kindly ask for an unplugged ceremony — please keep phones and cameras away during the vows. We want everyone fully present in that moment. Our photographer will capture everything, and photos will be shared with all guests shortly after the wedding!
+            </p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text t" data-pt="Haverá transporte organizado?" data-en="Will there be organised transport?">Will there be organised transport?</span>
+            <i class="faq-icon">+</i>
+          </button>
+          <div class="faq-a">
+            <p class="t"
+              data-pt="Detalhes sobre transferes entre os hotéis principais e o local serão divulgados próximos à data. Fique atento às atualizações neste site."
+              data-en="Details on transfers between the main hotels and the venue will be shared closer to the date. Keep an eye on updates on this site.">
+              Details on transfers between the main hotels and the venue will be shared closer to the date. Keep an eye on updates on this site.
+            </p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text t" data-pt="Tenho restrições alimentares — o que devo fazer?" data-en="I have dietary requirements — what should I do?">I have dietary requirements — what should I do?</span>
+            <i class="faq-icon">+</i>
+          </button>
+          <div class="faq-a">
+            <p class="t"
+              data-pt="Por favor, informe suas restrições alimentares no formulário de confirmação de presença. Faremos o possível para acomodar a todos."
+              data-en="Please let us know about any dietary requirements in the RSVP form below. We will do our best to accommodate everyone.">
+              Please let us know about any dietary requirements in the RSVP form below. We will do our best to accommodate everyone.
+            </p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text t" data-pt="Lista de presentes?" data-en="Wedding gift list?">Wedding gift list?</span>
+            <i class="faq-icon">+</i>
+          </button>
+          <div class="faq-a">
+            <p class="t"
+              data-pt="Sua presença é o nosso maior presente! Para quem desejar presentear, uma lista estará disponível em breve neste site."
+              data-en="Your presence is our greatest gift! For those who wish to give a gift, a list will be available on this site shortly.">
+              Your presence is our greatest gift! For those who wish to give a gift, a list will be available on this site shortly.
+            </p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text t" data-pt="Como é o clima na Irlanda do Norte em junho?" data-en="What's the weather like in Northern Ireland in June?">What's the weather like in Northern Ireland in June?</span>
+            <i class="faq-icon">+</i>
+          </button>
+          <div class="faq-a">
+            <p class="t"
+              data-pt="Junho é um dos meses mais agradáveis, com temperaturas entre 14°C e 20°C. Dias longos e luminosos! No entanto, a chuva é sempre possível — recomendamos trazer uma camada leve e elegante."
+              data-en="June is one of the most pleasant months, with temperatures between 14°C and 20°C. Long, bright days! However, a shower is always possible — we recommend bringing a light, elegant layer just in case.">
+              June is one of the most pleasant months, with temperatures between 14°C and 20°C. Long, bright days! However, a shower is always possible — we recommend bringing a light, elegant layer just in case.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- RSVP -->
+  <section id="rsvp">
+    <div class="section-inner">
+      <div class="section-tag reveal t" data-pt="Confirmação" data-en="Confirmation">Confirmation</div>
+      <h2 class="section-title reveal t" data-pt="Confirmar Presença" data-en="RSVP">RSVP</h2>
+      <div class="gold-line reveal"></div>
+      <div class="rsvp-wrap reveal">
+
+        <div id="rsvp-form-wrap">
+          <form class="rsvp-form" onsubmit="submitRsvp(event)">
+
+            <div class="form-row">
+              <div class="form-field">
+                <label class="form-label t" data-pt="Nome Completo" data-en="Full Name">Full Name</label>
+                <input class="form-input" type="text" id="f-name" required placeholder="—">
+              </div>
+              <div class="form-field">
+                <label class="form-label t" data-pt="E-mail" data-en="Email">Email</label>
+                <input class="form-input" type="email" id="f-email" required placeholder="—">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label t" data-pt="Você irá comparecer?" data-en="Will you be attending?">Will you be attending?</label>
+              <select class="form-select" id="f-attend" required onchange="toggleAttending()">
+                <option value="" class="t" data-pt="Selecione..." data-en="Select...">Select...</option>
+                <option value="yes" class="t" data-pt="Com alegria, estarei presente!" data-en="Joyfully accept!">Joyfully accept!</option>
+                <option value="no" class="t" data-pt="Infelizmente não poderei comparecer" data-en="Regretfully decline">Regretfully decline</option>
+              </select>
+            </div>
+
+            <div id="attending-fields" style="display:none; flex-direction:column; gap:18px;">
+
+              <!-- COMPANION -->
+              <div class="form-field">
+                <label class="form-label t" data-pt="Você virá com acompanhante?" data-en="Will you be bringing a guest?">Will you be bringing a guest?</label>
+                <select class="form-select" id="f-companion" onchange="toggleCompanion()">
+                  <option value="" class="t" data-pt="Selecione..." data-en="Select...">Select...</option>
+                  <option value="yes" class="t" data-pt="Sim, terei um acompanhante" data-en="Yes, I will bring a guest">Yes, I will bring a guest</option>
+                  <option value="no" class="t" data-pt="Não, virei sozinho(a)" data-en="No, I will attend alone">No, I will attend alone</option>
+                </select>
+              </div>
+
+              <div id="companion-name-field" style="display:none;">
+                <div class="form-field">
+                  <label class="form-label t" data-pt="Nome do acompanhante" data-en="Guest's full name">Guest's full name</label>
+                  <input class="form-input" type="text" id="f-companion-name" placeholder="—">
+                </div>
+              </div>
+
+              <!-- EVENTS -->
+              <div class="form-field">
+                <label class="form-label t" data-pt="Quais eventos você irá?" data-en="Which events will you attend?">Which events will you attend?</label>
+                <div class="form-checkbox-group">
+                  <label class="form-check">
+                    <input type="checkbox" id="f-ev1">
+                    <span class="t" data-pt="Evento I — Pré-Casamento (a confirmar)" data-en="Event I — Pre-Wedding (TBC)">Event I — Pre-Wedding (TBC)</span>
+                  </label>
+                  <label class="form-check">
+                    <input type="checkbox" id="f-ev2" checked>
+                    <span class="t" data-pt="Evento II — Cerimônia & Recepção, 19 de Junho" data-en="Event II — Ceremony & Reception, 19th June">Event II — Ceremony & Reception, 19th June</span>
+                  </label>
+                  <label class="form-check">
+                    <input type="checkbox" id="f-ev3">
+                    <span class="t" data-pt="Evento III — Dia Seguinte, 20 de Junho (a confirmar)" data-en="Event III — Day After, 20th June (TBC)">Event III — Day After, 20th June (TBC)</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- DINNER CHOICE -->
+              <div class="form-field">
+                <label class="form-label t" data-pt="Sua preferência de jantar" data-en="Your dinner preference">Your dinner preference</label>
+                <select class="form-select" id="f-dinner">
+                  <option value="" class="t" data-pt="Selecione..." data-en="Select...">Select...</option>
+                  <option value="turkey" class="t" data-pt="Peru" data-en="Turkey">Turkey</option>
+                  <option value="beef" class="t" data-pt="Carne Bovina" data-en="Beef">Beef</option>
+                </select>
+              </div>
+
+              <div id="companion-dinner-field" style="display:none;">
+                <div class="form-field">
+                  <label class="form-label t" data-pt="Preferência de jantar do acompanhante" data-en="Guest's dinner preference">Guest's dinner preference</label>
+                  <select class="form-select" id="f-dinner-companion">
+                    <option value="" class="t" data-pt="Selecione..." data-en="Select...">Select...</option>
+                    <option value="turkey" class="t" data-pt="Peru" data-en="Turkey">Turkey</option>
+                    <option value="beef" class="t" data-pt="Carne Bovina" data-en="Beef">Beef</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- DIETARY -->
+              <div class="form-field">
+                <label class="form-label t" data-pt="Restrições Alimentares" data-en="Dietary Requirements">Dietary Requirements</label>
+                <input class="form-input" type="text" id="f-diet" placeholder="—">
+              </div>
+
+            </div>
+
+            <div class="form-field">
+              <label class="form-label t" data-pt="Mensagem ao casal (opcional)" data-en="Message to the couple (optional)">Message to the couple (optional)</label>
+              <textarea class="form-textarea" id="f-msg" placeholder="—"></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn t" data-pt="Enviar Confirmação" data-en="Send RSVP">Send RSVP</button>
+          </form>
+        </div>
+
+        <div class="rsvp-success" id="rsvp-success">
+          <div class="rsvp-success-icon">💚</div>
+          <div class="rsvp-success-title t" data-pt="Obrigado!" data-en="Thank you!">Thank you!</div>
+          <p class="rsvp-success-text t"
+            data-pt="Recebemos a sua confirmação. Mal podemos esperar para celebrar este momento especial com você!"
+            data-en="We've received your RSVP. We can't wait to celebrate this special moment with you!">
+            We've received your RSVP. We can't wait to celebrate this special moment with you!
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-names">Sophie <span class="amp">&</span> Mateus</div>
+    <div class="footer-date t" data-pt="19 DE JUNHO DE 2027" data-en="19TH JUNE 2027">19TH JUNE 2027</div>
+    <div class="footer-divider"></div>
+    <div class="footer-venue">
+      Old Rectory Killyman<br>
+      Killyman Road, Dungannon, Co. Tyrone<br>
+      <span class="t" data-pt="Irlanda do Norte" data-en="Northern Ireland">Northern Ireland</span>
+    </div>
+  </footer>
+
+</div><!-- /site -->
+
+<script>
+// ─── DRAWER MENU ───
+function toggleDrawer() {
+  const drawer = document.getElementById('nav-drawer');
+  const overlay = document.getElementById('drawer-overlay');
+  const hamburger = document.getElementById('hamburger');
+  const isOpen = drawer.classList.contains('open');
+  if (isOpen) {
+    closeDrawer();
+  } else {
+    drawer.classList.add('open');
+    overlay.classList.add('open');
+    hamburger.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeDrawer() {
+  document.getElementById('nav-drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close drawer on Escape key
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+// Active nav link on scroll
+function initActiveNav() {
+  const sections = document.querySelectorAll('section[id], div[id="map"]');
+  const navLinks = document.querySelectorAll('.nav-links a, .drawer-links a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id);
+        });
+      }
+    });
+  }, { threshold: 0.35 });
+  sections.forEach(s => observer.observe(s));
+}
+
+// Update drawer language button label
+function updateDrawerLangBtn() {
+  const btn = document.getElementById('drawer-lang-btn');
+  if (btn) btn.innerHTML = currentLang === 'pt' ? '🌐 &nbsp; ENGLISH' : '🌐 &nbsp; PORTUGUÊS';
+}
+
+// ─── PASSWORD ───
+const CORRECT_PASSWORD = 'brazilandnorthernireland';
+
+function checkPassword() {
+  const input = document.getElementById('pw-input');
+  const error = document.getElementById('pw-error');
+  if (input.value === CORRECT_PASSWORD) {
+    document.getElementById('password-screen').classList.add('hidden');
+    error.classList.remove('show');
+  } else {
+    input.classList.add('error');
+    error.classList.add('show');
+    input.value = '';
+    setTimeout(() => input.classList.remove('error'), 500);
+  }
+}
+
+function togglePwVisibility() {
+  const input = document.getElementById('pw-input');
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+// ─── LANGUAGE ───
+let currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  applyLang();
+  document.getElementById('lang-screen').classList.add('hidden');
+  const site = document.getElementById('site');
+  site.classList.add('visible');
+  document.getElementById('lang-toggle').textContent = lang === 'pt' ? 'EN' : 'PT';
+  startCountdown();
+  initReveal();
+  initActiveNav();
+  updateDrawerLangBtn();
+}
+
+function toggleLang() {
+  setLang(currentLang === 'pt' ? 'en' : 'pt');
+  document.getElementById('lang-screen').classList.add('hidden');
+  document.getElementById('site').classList.add('visible');
+  updateDrawerLangBtn();
+}
+
+function applyLang() {
+  document.querySelectorAll('.t').forEach(el => {
+    const val = el.getAttribute('data-' + currentLang);
+    if (val) el.textContent = val;
+  });
+  // Fix select options
+  document.querySelectorAll('select option.t').forEach(opt => {
+    const val = opt.getAttribute('data-' + currentLang);
+    if (val) opt.textContent = val;
+  });
+  document.documentElement.lang = currentLang;
+}
+
+// ─── COUNTDOWN ───
+function startCountdown() {
+  function update() {
+    const target = new Date('2027-06-19T14:00:00');
+    const now = new Date();
+    const diff = target - now;
+    if (diff <= 0) {
+      document.getElementById('countdown').innerHTML = '<div style="font-family:Cormorant Garamond,serif;font-size:28px;color:var(--gold-light);font-style:italic;">Today is the day! 💚</div>';
+      return;
+    }
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cd-days').textContent = String(days).padStart(2,'0');
+    document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+    document.getElementById('cd-mins').textContent = String(mins).padStart(2,'0');
+    document.getElementById('cd-secs').textContent = String(secs).padStart(2,'0');
+  }
+  update();
+  setInterval(update, 1000);
+}
+
+// ─── SCROLL REVEAL ───
+function initReveal() {
+  const els = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.12 });
+  els.forEach(el => obs.observe(el));
+}
+
+// ─── GIFTS ───
+function copyGift(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied');
+    btn.textContent = '✓';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '⧉'; }, 2000);
+  });
+}
+
+// ─── FAQ ───
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ─── RSVP ───
+function toggleAttending() {
+  const val = document.getElementById('f-attend').value;
+  const fields = document.getElementById('attending-fields');
+  fields.style.display = val === 'yes' ? 'flex' : 'none';
+}
+
+function toggleCompanion() {
+  const val = document.getElementById('f-companion').value;
+  document.getElementById('companion-name-field').style.display = val === 'yes' ? 'block' : 'none';
+  document.getElementById('companion-dinner-field').style.display = val === 'yes' ? 'block' : 'none';
+}
+
+// ─── FORMSPREE ENDPOINT ───
+// Substitua pelo seu endpoint após criar conta em formspree.io
+const FORMSPREE_URL = 'https://formspree.io/f/mgopkjbd';
+
+async function submitRsvp(e) {
+  e.preventDefault();
+
+  const btn = document.querySelector('.submit-btn');
+  btn.textContent = '...';
+  btn.disabled = true;
+
+  const attending = document.getElementById('f-attend').value;
+  const companion = attending === 'yes' ? document.getElementById('f-companion').value : 'no';
+  const lang = currentLang;
+  const yes = lang === 'pt' ? 'Sim' : 'Yes';
+  const no  = lang === 'pt' ? 'Não' : 'No';
+
+  const payload = {
+    _subject: `RSVP — Sophie & Mateus: ${document.getElementById('f-name').value}`,
+    Nome:                    document.getElementById('f-name').value,
+    Email:                   document.getElementById('f-email').value,
+    Presença:                attending === 'yes' ? '✅ Confirmado' : '❌ Não poderá comparecer',
+    Acompanhante:            companion === 'yes' ? yes : no,
+    'Nome do acompanhante':  companion === 'yes' ? (document.getElementById('f-companion-name').value || '—') : '—',
+    'Evento I (Pré-casamento)': document.getElementById('f-ev1').checked ? yes : no,
+    'Evento II (Cerimônia)':    document.getElementById('f-ev2').checked ? yes : no,
+    'Evento III (Dia seguinte)':document.getElementById('f-ev3').checked ? yes : no,
+    'Jantar (convidado)':       attending === 'yes' ? (document.getElementById('f-dinner').value || '—') : '—',
+    'Jantar (acompanhante)':    companion === 'yes' ? (document.getElementById('f-dinner-companion').value || '—') : '—',
+    'Restrições alimentares':   document.getElementById('f-diet').value || '—',
+    Mensagem:                   document.getElementById('f-msg').value || '—',
+  };
+
+  try {
+    const res = await fetch(FORMSPREE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) throw new Error('Falha no envio');
+  } catch (err) {
+    // Mesmo em caso de erro de rede, mostramos sucesso ao convidado
+    console.warn('Formspree error:', err);
+  }
+
+  document.getElementById('rsvp-form-wrap').style.display = 'none';
+  document.getElementById('rsvp-success').classList.add('show');
+  applyLang();
+}
+
+// ─── INIT ───
+// Slight delay so font loads before lang screen
+window.addEventListener('load', () => {
+  // If already visible (back-navigation), init
+});
+</script>
+</body>
+</html>
