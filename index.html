@@ -492,6 +492,29 @@ section { padding: 80px 24px; }
 }
 .event-detail-icon { color: var(--gold); font-size: 10px; margin-top: 3px; flex-shrink: 0; }
 
+.intl-badge {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: 8px; letter-spacing: 2px;
+  color: var(--white); background: var(--green);
+  padding: 4px 10px; margin: 0 0 10px;
+  text-transform: uppercase;
+}
+.white-dress .intl-badge { background: var(--gold); color: var(--green-dark); }
+.schedule-day .intl-badge { background: var(--gold); color: var(--green-dark); margin-bottom: 6px; }
+.white-dress {
+  margin-bottom: 28px; text-align: center;
+  border: 1px solid rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.06);
+  padding: 28px 24px;
+}
+.form-note {
+  border-left: 3px solid var(--gold);
+  background: var(--cream);
+  padding: 12px 16px;
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 15px; color: var(--text-light); line-height: 1.6;
+}
 .tbc-badge {
   display: inline-block;
   font-family: 'Cinzel', serif;
@@ -575,6 +598,55 @@ section { padding: 80px 24px; }
   display: inline-block; margin-top: 12px;
   font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 2px;
   color: var(--green); border: 1px solid rgba(59,89,65,0.3); padding: 4px 10px;
+}
+
+/* ─── GALLERY ─── */
+#gallery { background: var(--cream); }
+.gallery-intro {
+  text-align: center; max-width: 520px; margin: -24px auto 40px;
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 18px; color: var(--text-light); line-height: 1.8;
+}
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 220px;
+  gap: 12px;
+}
+.gallery-item {
+  position: relative; overflow: hidden; cursor: zoom-in;
+  border: 1px solid rgba(184,148,60,0.3);
+  background: var(--cream-dark);
+}
+.gallery-item.tall { grid-row: span 2; }
+.gallery-item img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 0.6s ease;
+}
+.gallery-item:hover img { transform: scale(1.04); }
+.gallery-empty {
+  display: none; text-align: center; padding: 48px 24px;
+  border: 1px dashed rgba(184,148,60,0.45);
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 18px; color: var(--text-light);
+}
+.gallery-empty.show { display: block; }
+@media (max-width: 620px) {
+  .gallery-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 160px; gap: 8px; }
+}
+.lightbox {
+  position: fixed; inset: 0; z-index: 3000;
+  background: rgba(20,28,22,0.92);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s;
+  padding: 24px;
+}
+.lightbox.open { opacity: 1; visibility: visible; }
+.lightbox img { max-width: 100%; max-height: 88vh; object-fit: contain; border: 1px solid rgba(184,148,60,0.4); }
+.lightbox-close {
+  position: absolute; top: 18px; right: 22px;
+  background: none; border: none; color: var(--gold-light);
+  font-size: 30px; cursor: pointer; line-height: 1;
 }
 
 /* ─── SCHEDULE ─── */
@@ -1118,6 +1190,7 @@ footer {
   <nav>
     <div class="nav-brand">Sophie <span style="color:var(--gold)">&</span> Mateus</div>
     <ul class="nav-links">
+      <li><a href="#gallery" class="t" data-pt="Fotos" data-en="Photos">Photos</a></li>
       <li><a href="#events" class="t" data-pt="Eventos" data-en="Events">Events</a></li>
       <li><a href="#schedule" class="t" data-pt="Roteiro" data-en="Schedule">Schedule</a></li>
       <li><a href="#travel" class="t" data-pt="Como Chegar" data-en="Getting Here">Getting Here</a></li>
@@ -1145,6 +1218,7 @@ footer {
     <div class="drawer-date">19 · 06 · 2027</div>
     <div class="drawer-divider"></div>
     <ul class="drawer-links">
+      <li><a href="#gallery" onclick="closeDrawer()"><span class="drawer-icon">📷</span><span class="t" data-pt="Nossos Momentos" data-en="Our Moments">Our Moments</span></a></li>
       <li><a href="#events" onclick="closeDrawer()"><span class="drawer-icon">📅</span><span class="t" data-pt="Eventos" data-en="Events">Events</span></a></li>
       <li><a href="#schedule" onclick="closeDrawer()"><span class="drawer-icon">⏱</span><span class="t" data-pt="Roteiro" data-en="Schedule">Schedule</span></a></li>
       <li><a href="#map" onclick="closeDrawer()"><span class="drawer-icon">📍</span><span class="t" data-pt="Localização" data-en="Location">Location</span></a></li>
@@ -1182,6 +1256,32 @@ footer {
     </div>
   </section>
 
+  <!-- GALLERY -->
+  <section id="gallery">
+    <div class="section-inner">
+      <div class="section-tag reveal t" data-pt="Sophie &amp; Mateus" data-en="Sophie &amp; Mateus">Sophie &amp; Mateus</div>
+      <h2 class="section-title reveal t" data-pt="Nossos Momentos" data-en="Our Moments">Our Moments</h2>
+      <div class="gold-line reveal"></div>
+      <p class="gallery-intro reveal t"
+        data-pt="Do Brasil à Irlanda do Norte — alguns dos nossos momentos favoritos até aqui."
+        data-en="From Brazil to Northern Ireland — a few of our favourite moments so far.">From Brazil to Northern Ireland — a few of our favourite moments so far.</p>
+      <div class="gallery-grid reveal" id="gallery-grid">
+        <div class="gallery-item tall" onclick="openLightbox(this)"><img src="couple-1.jpg" alt="Sophie & Mateus" loading="lazy" onerror="this.parentElement.remove(); checkGallery();"></div>
+        <div class="gallery-item" onclick="openLightbox(this)"><img src="couple-2.jpg" alt="Sophie & Mateus" loading="lazy" onerror="this.parentElement.remove(); checkGallery();"></div>
+        <div class="gallery-item" onclick="openLightbox(this)"><img src="couple-3.jpg" alt="Sophie & Mateus" loading="lazy" onerror="this.parentElement.remove(); checkGallery();"></div>
+        <div class="gallery-item tall" onclick="openLightbox(this)"><img src="couple-4.jpg" alt="Sophie & Mateus" loading="lazy" onerror="this.parentElement.remove(); checkGallery();"></div>
+        <div class="gallery-item" onclick="openLightbox(this)"><img src="couple-5.jpg" alt="Sophie & Mateus" loading="lazy" onerror="this.parentElement.remove(); checkGallery();"></div>
+        <div class="gallery-item" onclick="openLightbox(this)"><img src="couple-6.jpg" alt="Sophie & Mateus" loading="lazy" onerror="this.parentElement.remove(); checkGallery();"></div>
+      </div>
+      <div class="gallery-empty t" id="gallery-empty" data-pt="Fotos em breve 📷" data-en="Photos coming soon 📷">Photos coming soon 📷</div>
+    </div>
+  </section>
+
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" aria-label="Close">×</button>
+    <img id="lightbox-img" src="" alt="Sophie & Mateus">
+  </div>
+
   <!-- EVENTS -->
   <section id="events">
     <div class="section-inner">
@@ -1193,6 +1293,7 @@ footer {
         <div class="event-card reveal">
           <img class="event-card-img" src="img-cottage.webp" alt="Irish cottage watercolour illustration">
           <div class="event-card-body">
+            <span class="intl-badge t" data-pt="Apenas convidados internacionais" data-en="International guests only">International guests only</span>
             <div class="event-num t" data-pt="EVENTO I" data-en="EVENT I">EVENT I</div>
             <div class="event-name t" data-pt="Pré-Casamento" data-en="Pre-Wedding">Pre-Wedding</div>
             <div class="event-name-en t" data-pt="Celebração de chegada" data-en="Welcome celebration">Welcome celebration</div>
@@ -1202,9 +1303,21 @@ footer {
             </div>
             <div class="event-detail">
               <span class="event-detail-icon">◆</span>
-              <span class="t" data-pt="Local a confirmar" data-en="Venue to be confirmed">Venue to be confirmed</span>
+              <span><a href="https://maps.google.com/?q=Rosehill+House,+5+Roughan+Rd,+Stewartstown,+Dungannon+BT71+5PU" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,148,60,0.4);">Rosehill House ↗</a></span>
             </div>
-            <span class="tbc-badge t" data-pt="Em breve" data-en="Coming soon">Coming soon</span>
+            <div class="event-detail">
+              <span class="event-detail-icon">◆</span>
+              <span>5 Roughan Rd, Stewartstown, Dungannon BT71 5PU</span>
+            </div>
+            <div class="event-detail">
+              <span class="event-detail-icon">◆</span>
+              <span class="t" data-pt="16h00 – 23h00" data-en="4:00 PM – 11:00 PM">4:00 PM – 11:00 PM</span>
+            </div>
+            <div class="event-detail">
+              <span class="event-detail-icon">◆</span>
+              <span class="t" data-pt="Dress code: todos de branco" data-en="Dress code: all white">Dress code: all white</span>
+            </div>
+            <span class="tbc-badge t" data-pt="Capacidade máxima: 80 pessoas" data-en="Max capacity: 80 guests">Max capacity: 80 guests</span>
           </div>
         </div>
 
@@ -1226,12 +1339,17 @@ footer {
               <span class="event-detail-icon">◆</span>
               <span class="t" data-pt="Killyman, Co. Tyrone, Irlanda do Norte" data-en="Killyman, Co. Tyrone, Northern Ireland">Killyman, Co. Tyrone, Northern Ireland</span>
             </div>
+            <div class="event-detail">
+              <span class="event-detail-icon">◆</span>
+              <span class="t" data-pt="Chegada a partir das 13h00 · Cerimônia às 14h00" data-en="Arrival from 1:00 PM · Ceremony at 2:00 PM">Arrival from 1:00 PM · Ceremony at 2:00 PM</span>
+            </div>
           </div>
         </div>
 
         <div class="event-card reveal">
           <img class="event-card-img" src="img-pub.webp" alt="Bishops Pub House watercolour illustration">
           <div class="event-card-body">
+            <span class="intl-badge t" data-pt="Apenas convidados internacionais" data-en="International guests only">International guests only</span>
             <div class="event-num t" data-pt="EVENTO III" data-en="EVENT III">EVENT III</div>
             <div class="event-name t" data-pt="Dia Seguinte" data-en="Day After">Day After</div>
             <div class="event-name-en t" data-pt="Continuando a festa" data-en="Continuing the celebration">Continuing the celebration</div>
@@ -1241,9 +1359,17 @@ footer {
             </div>
             <div class="event-detail">
               <span class="event-detail-icon">◆</span>
-              <span class="t" data-pt="Local a confirmar" data-en="Venue to be confirmed">Venue to be confirmed</span>
+              <span><a href="https://maps.google.com/?q=Bishops,+19+Killyman+St,+Moy,+Dungannon+BT71+7SJ" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,148,60,0.4);">Bishops, Moy ↗</a></span>
             </div>
-            <span class="tbc-badge t" data-pt="Em breve" data-en="Coming soon">Coming soon</span>
+            <div class="event-detail">
+              <span class="event-detail-icon">◆</span>
+              <span>19 Killyman St, Moy, Dungannon BT71 7SJ</span>
+            </div>
+            <div class="event-detail">
+              <span class="event-detail-icon">◆</span>
+              <span class="t" data-pt="A partir do meio-dia" data-en="From midday">From midday</span>
+            </div>
+            <span class="tbc-badge t" data-pt="Capacidade máxima: 120 pessoas" data-en="Max capacity: 120 guests">Max capacity: 120 guests</span>
           </div>
         </div>
 
@@ -1265,6 +1391,7 @@ footer {
           <div class="schedule-day-header">
             <img class="schedule-day-img" src="img-cottage.webp" alt="Welcome Party">
             <div class="schedule-day-info">
+              <span class="intl-badge t" data-pt="Apenas convidados internacionais" data-en="International guests only">International guests only</span>
               <div class="schedule-day-num t" data-pt="DIA I" data-en="DAY I">DAY I</div>
               <div class="schedule-day-title t" data-pt="Pré-Casamento" data-en="Pre-Wedding">Pre-Wedding</div>
               <div class="schedule-day-date">18 <span class="t" data-pt="de Junho" data-en="June">June</span> 2027</div>
@@ -1275,7 +1402,7 @@ footer {
               <div class="timeline-dot"></div>
               <div class="timeline-time">4:00 PM</div>
               <div class="timeline-event t" data-pt="Abertura da Welcome Party" data-en="Welcome Party Opens">Welcome Party Opens</div>
-              <div class="timeline-desc t" data-pt="Chegada dos convidados e boas-vindas" data-en="Guests arrive & welcome drinks">Guests arrive & welcome drinks</div>
+              <div class="timeline-desc t" data-pt="Rosehill House · Chegada e boas-vindas" data-en="Rosehill House · Guests arrive & welcome drinks">Rosehill House · Guests arrive & welcome drinks</div>
             </div>
             <div class="timeline-item">
               <div class="timeline-dot"></div>
@@ -1303,21 +1430,27 @@ footer {
             </div>
           </div>
           <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-time">1:00 PM</div>
+              <div class="timeline-event t" data-pt="Chegada dos Convidados" data-en="Guest Arrival">Guest Arrival</div>
+              <div class="timeline-desc t" data-pt="Recepção dos convidados no Old Rectory" data-en="Welcome to Old Rectory Killyman">Welcome to Old Rectory Killyman</div>
+            </div>
             <div class="timeline-item highlight">
               <div class="timeline-dot"></div>
-              <div class="timeline-time">3:00 PM</div>
+              <div class="timeline-time">2:00 PM</div>
               <div class="timeline-event t" data-pt="Início da Cerimônia" data-en="Ceremony Begins">Ceremony Begins</div>
               <div class="timeline-desc t" data-pt="Old Rectory Killyman" data-en="Old Rectory Killyman">Old Rectory Killyman</div>
             </div>
             <div class="timeline-item highlight">
               <div class="timeline-dot"></div>
-              <div class="timeline-time">4:00 PM</div>
+              <div class="timeline-time">3:00 PM</div>
               <div class="timeline-event t" data-pt="Receptivo" data-en="Drinks Reception">Drinks Reception</div>
               <div class="timeline-desc t" data-pt="Espumante, canapés e fotos nos jardins" data-en="Bubbles, canapés & photos in the gardens">Bubbles, canapés & photos in the gardens</div>
             </div>
             <div class="timeline-item highlight">
               <div class="timeline-dot"></div>
-              <div class="timeline-time">6:00 PM</div>
+              <div class="timeline-time">5:00 PM</div>
               <div class="timeline-event t" data-pt="Jantar" data-en="Wedding Dinner">Wedding Dinner</div>
               <div class="timeline-desc t" data-pt="Discursos e jantar de celebração" data-en="Speeches & wedding dinner">Speeches & wedding dinner</div>
             </div>
@@ -1341,6 +1474,7 @@ footer {
           <div class="schedule-day-header">
             <img class="schedule-day-img" src="img-pub.webp" alt="Day After">
             <div class="schedule-day-info">
+              <span class="intl-badge t" data-pt="Apenas convidados internacionais" data-en="International guests only">International guests only</span>
               <div class="schedule-day-num t" data-pt="DIA III" data-en="DAY III">DAY III</div>
               <div class="schedule-day-title t" data-pt="Dia Seguinte" data-en="The Day After">The Day After</div>
               <div class="schedule-day-date">20 <span class="t" data-pt="de Junho" data-en="June">June</span> 2027</div>
@@ -1349,13 +1483,13 @@ footer {
           <div class="timeline">
             <div class="timeline-item highlight">
               <div class="timeline-dot"></div>
-              <div class="timeline-time">1:00 PM</div>
+              <div class="timeline-time">12:00 PM</div>
               <div class="timeline-event t" data-pt="Abrimos o Pub!" data-en="Pub Opens!">Pub Opens!</div>
-              <div class="timeline-desc t" data-pt="Encontro descontraído para relembrar a festa" data-en="A relaxed gathering to relive the celebration">A relaxed gathering to relive the celebration</div>
+              <div class="timeline-desc t" data-pt="Bishops, Moy · Encontro descontraído para relembrar a festa" data-en="Bishops, Moy · A relaxed gathering to relive the celebration">Bishops, Moy · A relaxed gathering to relive the celebration</div>
             </div>
             <div class="timeline-item">
               <div class="timeline-dot"></div>
-              <div class="timeline-time">1:00 PM onwards</div>
+              <div class="timeline-time t" data-pt="Ao longo da tarde" data-en="Through the afternoon">Through the afternoon</div>
               <div class="timeline-event t" data-pt="Almoço & Drinks" data-en="Lunch & Drinks">Lunch & Drinks</div>
               <div class="timeline-desc t" data-pt="Comida de pub, risadas e boas memórias" data-en="Pub food, laughter & good memories">Pub food, laughter & good memories</div>
             </div>
@@ -1439,18 +1573,18 @@ footer {
           <div class="travel-item">
             <div class="travel-name t" data-pt="Transfer / Táxi" data-en="Transfer / Taxi">Transfer / Taxi</div>
             <div class="travel-detail t"
-              data-pt="Taxis locais disponíveis em Dungannon. Recomendamos reservar com antecedência durante o fim de semana. Mais informações sobre transfers organizados pelo casal serão enviadas em breve."
-              data-en="Local taxis available in Dungannon. We recommend booking in advance for the weekend. Details on any organised transfers will be shared closer to the date.">
-              Local taxis available in Dungannon. We recommend booking in advance for the weekend. Details on any organised transfers will be shared closer to the date.
+              data-pt="Táxis locais disponíveis em Dungannon — recomendamos reservar com antecedência para o fim de semana. Para quem estiver hospedado no Ryandale Inn, haverá um fluxo constante de táxis saindo do hotel — basta falar com a recepção."
+              data-en="Local taxis are available in Dungannon — we recommend booking in advance for the weekend. For guests staying at the Ryandale Inn, there will be a constant flow of taxis from the hotel — please speak to the receptionist.">
+              Local taxis are available in Dungannon — we recommend booking in advance for the weekend. For guests staying at the Ryandale Inn, there will be a constant flow of taxis from the hotel — please speak to the receptionist.
             </div>
           </div>
 
           <div class="travel-item">
             <div class="travel-name t" data-pt="De Belfast" data-en="From Belfast">From Belfast</div>
             <div class="travel-detail t"
-              data-pt="O ônibus Goldline conecta Belfast a Dungannon com saídas regulares. De Dungannon, um táxi local leva até o local em cerca de 10 min. Recomendamos reservar o táxi com antecedência."
-              data-en="The Goldline coach connects Belfast to Dungannon with regular departures. From Dungannon, a local taxi takes around 10 min to the venue. We recommend pre-booking your taxi.">
-              The Goldline coach connects Belfast to Dungannon with regular departures. From Dungannon, a local taxi takes around 10 min to the venue. We recommend pre-booking your taxi.
+              data-pt="De Belfast, o trajeto até o local leva cerca de 1h de carro ou táxi. Recomendamos reservar o seu táxi com antecedência."
+              data-en="From Belfast, the venue is around 1 hour away by car or taxi. We recommend pre-booking your taxi.">
+              From Belfast, the venue is around 1 hour away by car or taxi. We recommend pre-booking your taxi.
             </div>
           </div>
         </div>
@@ -1495,6 +1629,42 @@ footer {
       <h2 class="section-title reveal t" data-pt="Onde Ficar" data-en="Where to Stay">Where to Stay</h2>
       <div class="gold-line reveal"></div>
       <div class="hotels-grid">
+
+        <div class="hotel-card reveal">
+          <div class="hotel-stars" style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;">INN</div>
+          <div class="hotel-name"><a href="https://www.booking.com/hotel/gb/the-ryandale-inn.en-gb.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(184,148,60,0.4);">The Ryandale Inn ↗</a></div>
+          <div class="hotel-location">Dungannon, Co. Tyrone</div>
+          <div class="hotel-detail t"
+            data-pt="Uma das opções mais práticas: haverá um fluxo constante de táxis saindo do hotel para o casamento — basta falar com a recepção."
+            data-en="One of the most convenient options: there will be a constant flow of taxis from the hotel to the wedding — just speak to the receptionist.">
+            One of the most convenient options: there will be a constant flow of taxis from the hotel to the wedding — just speak to the receptionist.
+          </div>
+          <span class="hotel-distance t" data-pt="~10 min do local" data-en="~10 min from venue">~10 min from venue</span>
+        </div>
+
+        <div class="hotel-card reveal">
+          <div class="hotel-stars" style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;">GUESTHOUSE</div>
+          <div class="hotel-name"><a href="https://www.booking.com/hotel/gb/charlemont-house.en-gb.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(184,148,60,0.4);">Charlemont House ↗</a></div>
+          <div class="hotel-location">Moy, Co. Tyrone</div>
+          <div class="hotel-detail t"
+            data-pt="Casa de hóspedes acolhedora na vila de Moy, perto do Old Rectory e do Bishops — ideal para os três dias de celebração."
+            data-en="Welcoming guesthouse in Moy village, close to Old Rectory and Bishops — ideal for all three days of celebrations.">
+            Welcoming guesthouse in Moy village, close to Old Rectory and Bishops — ideal for all three days of celebrations.
+          </div>
+          <span class="hotel-distance t" data-pt="~10 min do local" data-en="~10 min from venue">~10 min from venue</span>
+        </div>
+
+        <div class="hotel-card reveal">
+          <div class="hotel-stars" style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;">LUXURY LODGE</div>
+          <div class="hotel-name"><a href="https://thehuntinglodgeni.com/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(184,148,60,0.4);">The Hunting Lodge ↗</a></div>
+          <div class="hotel-location">Moy, Co. Tyrone</div>
+          <div class="hotel-detail t"
+            data-pt="Lodge de luxo em Moy, a poucos minutos do local. Uma opção especial para quem quer conforto e privacidade durante o fim de semana."
+            data-en="Luxury lodge in Moy, just minutes from the venue. A special option for those wanting comfort and privacy over the weekend.">
+            Luxury lodge in Moy, just minutes from the venue. A special option for those wanting comfort and privacy over the weekend.
+          </div>
+          <span class="hotel-distance t" data-pt="~10 min do local" data-en="~10 min from venue">~10 min from venue</span>
+        </div>
 
         <div class="hotel-card reveal">
           <div class="hotel-stars">★★★★</div>
@@ -1542,18 +1712,6 @@ footer {
             Great base in Belfast for those wanting to explore the city before or after the wedding. Well connected to the airport and city centre.
           </div>
           <span class="hotel-distance t" data-pt="~1h do local" data-en="~1hr from venue">~1hr from venue</span>
-        </div>
-
-        <div class="hotel-card reveal">
-          <div class="hotel-stars">★★★</div>
-          <div class="hotel-name"><a href="https://www.booking.com/hotel/gb/charlemont-arms.en-gb.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(184,148,60,0.4);">The Charlemont Arms Hotel ↗</a></div>
-          <div class="hotel-location">Moy, Co. Tyrone</div>
-          <div class="hotel-detail t"
-            data-pt="Hotel charmoso no centro da vila de Moy, a poucos minutos do local. Ambiente acolhedor e com caráter local autêntico — perfeito para quem quer estar bem perto das celebrações."
-            data-en="Charming hotel in the heart of Moy village, just minutes from the venue. Warm, characterful atmosphere with authentic local feel — ideal for guests wanting to be close to the action.">
-            Charming hotel in the heart of Moy village, just minutes from the venue. Warm, characterful atmosphere with authentic local feel — ideal for guests wanting to be close to the action.
-          </div>
-          <span class="hotel-distance t" data-pt="~10 min do local" data-en="~10 min from venue">~10 min from venue</span>
         </div>
 
         <div class="hotel-card reveal">
@@ -1608,22 +1766,26 @@ footer {
       <div class="section-tag reveal t" data-pt="Vestuário" data-en="Attire">Attire</div>
       <h2 class="section-title reveal t" data-pt="Dress Code" data-en="Dress Code">Dress Code</h2>
       <div class="gold-line reveal"></div>
+      <div class="white-dress reveal">
+        <span class="intl-badge t" data-pt="Apenas convidados internacionais" data-en="International guests only">International guests only</span>
+        <div class="dress-label t" data-pt="Dia I · Pré-Casamento · 18 de Junho" data-en="Day I · Pre-Wedding · 18th June">Day I · Pre-Wedding · 18th June</div>
+        <div class="dress-title t" data-pt="Todos de Branco" data-en="All White">All White</div>
+        <div class="dress-desc t"
+          data-pt="Para a nossa welcome party, pedimos que todos venham vestidos de branco — da cabeça aos pés!"
+          data-en="For our welcome party, we kindly ask everyone to dress in white — head to toe!">
+          For our welcome party, we kindly ask everyone to dress in white — head to toe!
+        </div>
+      </div>
+      <div class="dress-label reveal t" style="text-align:center; margin-bottom:16px;" data-pt="Dia II · O Casamento · 19 de Junho" data-en="Day II · The Wedding · 19th June">Day II · The Wedding · 19th June</div>
       <div class="dress-grid">
         <div class="dress-card reveal">
           <div class="dress-icon">♀</div>
           <div class="dress-label t" data-pt="Convidadas" data-en="Guests (Ladies)">Guests (Ladies)</div>
-          <div class="dress-title t" data-pt="Traje Formal / Morning Dress opcional" data-en="Formal / Morning Dress optional">Formal / Morning Dress optional</div>
+          <div class="dress-title t" data-pt="Traje Formal" data-en="Formal">Formal</div>
           <div class="dress-desc t"
-            data-pt="Vestidos longos ou midi elegantes são bem-vindos. Evite branco, marfim e tons muito próximos do vestido de noiva. Saltos podem ser trocados após a cerimônia."
-            data-en="Formal dress or elegant midi welcome. Morning dress is optional. Please avoid white, ivory and champagne tones. Heels may be swapped after the ceremony — the grounds are garden-style.">
-            Formal dress or elegant midi welcome. Morning dress is optional. Please avoid white, ivory and champagne tones. Heels may be swapped after the ceremony — the grounds are garden-style.
-          </div>
-          <div class="dress-palette">
-            <div class="swatch" style="background:#6B8F71" title="Sage"></div>
-            <div class="swatch" style="background:#B8943C" title="Gold"></div>
-            <div class="swatch" style="background:#8B7BAB" title="Lavender"></div>
-            <div class="swatch" style="background:#C0918A" title="Dusty Rose"></div>
-            <div class="swatch" style="background:#4A6480" title="Navy"></div>
+            data-pt="Vestidos longos ou midi elegantes são bem-vindos. Por favor, evite branco, marfim e tons próximos do vestido de noiva."
+            data-en="Formal dress or elegant midi welcome. Please avoid white, ivory and champagne tones.">
+            Formal dress or elegant midi welcome. Please avoid white, ivory and champagne tones.
           </div>
         </div>
 
@@ -1635,12 +1797,6 @@ footer {
             data-pt="Terno com gravata é o traje indicado. Morning dress é bem-vindo para quem preferir. Evite trajes casuais."
             data-en="Lounge suit with tie is the dress code. Morning dress is welcome for those who prefer it. Please avoid casual attire.">
             Lounge suit with tie is the dress code. Morning dress is welcome for those who prefer it. Please avoid casual attire.
-          </div>
-          <div class="dress-palette">
-            <div class="swatch" style="background:#1A1A2E" title="Midnight Black"></div>
-            <div class="swatch" style="background:#2C3E6B" title="Navy"></div>
-            <div class="swatch" style="background:#3B3B3B" title="Charcoal"></div>
-            <div class="swatch" style="background:#4A5240" title="Dark Green"></div>
           </div>
         </div>
       </div>
@@ -1667,6 +1823,19 @@ footer {
         Your presence is the greatest gift we could ask for. For those who would like to give a gift, we've included our details below.
       </p>
 
+      <!-- House note -->
+      <div class="reveal" style="margin-top:0; margin-bottom:32px; border:1px solid rgba(184,148,60,0.25); background:var(--white); padding:28px 32px; display:flex; gap:18px; align-items:flex-start; max-width:700px; margin-left:auto; margin-right:auto;">
+        <div style="font-size:28px; flex-shrink:0;">🏠</div>
+        <div>
+          <div style="font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:var(--gold); margin-bottom:8px;" class="t" data-pt="NOSSA NOVA CASA" data-en="OUR NEW HOME">OUR NEW HOME</div>
+          <p style="font-size:13.5px; color:var(--text-light); line-height:1.9; font-style:italic;" class="t"
+            data-pt="Estamos no processo de comprar a nossa primeira casa juntos — um passo enorme e cheio de significado para nós. Se quiser contribuir para este sonho em vez de um presente tradicional, adoraríamos e agradecemos de coração. Qualquer valor é recebido com muito amor. 🏡"
+            data-en="We are in the process of buying our first home together — a huge and meaningful step for us as a couple. If you'd like to contribute towards our new home instead of a traditional gift, we would be truly touched and grateful. Every contribution, big or small, is received with so much love. 🏡">
+            We are in the process of buying our first home together — a huge and meaningful step for us as a couple. If you'd like to contribute towards our new home instead of a traditional gift, we would be truly touched and grateful. Every contribution, big or small, is received with so much love. 🏡
+          </p>
+        </div>
+      </div>
+
       <div class="gifts-grid">
 
         <!-- Brazil -->
@@ -1677,8 +1846,8 @@ footer {
           <div class="gift-details">
             <div class="gift-row">
               <span class="gift-label">Chave Pix</span>
-              <span class="gift-value">08733993661</span>
-              <button class="gift-copy-btn" onclick="copyGift(this, '08733993661')" title="Copiar">⧉</button>
+              <span class="gift-value" style="word-break:break-all;">mateusfg@yahoo.com.br</span>
+              <button class="gift-copy-btn" onclick="copyGift(this, 'mateusfg@yahoo.com.br')" title="Copiar">⧉</button>
             </div>
             <div class="gift-row">
               <span class="gift-label t" data-pt="Titular" data-en="Name">Name</span>
@@ -1695,34 +1864,21 @@ footer {
           <div class="gift-details">
             <div class="gift-row">
               <span class="gift-label">Sort Code</span>
-              <span class="gift-value">04-00-04</span>
-              <button class="gift-copy-btn" onclick="copyGift(this, '04-00-04')" title="Copy">⧉</button>
+              <span class="gift-value">04-00-75</span>
+              <button class="gift-copy-btn" onclick="copyGift(this, '04-00-75')" title="Copy">⧉</button>
             </div>
             <div class="gift-row">
               <span class="gift-label t" data-pt="Conta" data-en="Account">Account</span>
-              <span class="gift-value">79577967</span>
-              <button class="gift-copy-btn" onclick="copyGift(this, '79577967')" title="Copy">⧉</button>
+              <span class="gift-value">29646758</span>
+              <button class="gift-copy-btn" onclick="copyGift(this, '29646758')" title="Copy">⧉</button>
             </div>
             <div class="gift-row">
-              <span class="gift-label t" data-pt="Titular" data-en="Name">Name</span>
-              <span class="gift-value">Mateus Gomes</span>
+              <span class="gift-label t" data-pt="Beneficiária" data-en="Beneficiary">Beneficiary</span>
+              <span class="gift-value">Sophie McMurray</span>
             </div>
           </div>
         </div>
 
-      </div>
-
-      <!-- House note -->
-      <div class="reveal" style="margin-top:32px; border:1px solid rgba(184,148,60,0.25); background:var(--white); padding:28px 32px; display:flex; gap:18px; align-items:flex-start; max-width:700px; margin-left:auto; margin-right:auto; margin-top:32px;">
-        <div style="font-size:28px; flex-shrink:0;">🏠</div>
-        <div>
-          <div style="font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:var(--gold); margin-bottom:8px;" class="t" data-pt="NOSSA NOVA CASA" data-en="OUR NEW HOME">OUR NEW HOME</div>
-          <p style="font-size:13.5px; color:var(--text-light); line-height:1.9; font-style:italic;" class="t"
-            data-pt="Estamos no processo de comprar a nossa primeira casa juntos — um passo enorme e cheio de significado para nós. Se quiser contribuir para este sonho em vez de um presente tradicional, adoraríamos e agradecemos de coração. Qualquer valor é recebido com muito amor. 🏡"
-            data-en="We are in the process of buying our first home together — a huge and meaningful step for us as a couple. If you'd like to contribute towards our new home instead of a traditional gift, we would be truly touched and grateful. Every contribution, big or small, is received with so much love. 🏡">
-            We are in the process of buying our first home together — a huge and meaningful step for us as a couple. If you'd like to contribute towards our new home instead of a traditional gift, we would be truly touched and grateful. Every contribution, big or small, is received with so much love. 🏡
-          </p>
-        </div>
       </div>
 
       <p class="gift-note reveal t"
@@ -1882,9 +2038,9 @@ footer {
           </button>
           <div class="faq-a">
             <p class="t"
-              data-pt="Detalhes sobre transferes entre os hotéis principais e o local serão divulgados próximos à data. Fique atento às atualizações neste site."
-              data-en="Details on transfers between the main hotels and the venue will be shared closer to the date. Keep an eye on updates on this site.">
-              Details on transfers between the main hotels and the venue will be shared closer to the date. Keep an eye on updates on this site.
+              data-pt="Não haverá transporte organizado — pedimos que cada convidado organize o seu próprio deslocamento. Se precisar de ajuda, fale com a gente que teremos prazer em apoiar. Para quem estiver no Ryandale Inn, haverá um fluxo constante de táxis — basta falar com a recepção."
+              data-en="There is no organised transport — we kindly ask guests to arrange their own. If you need any help, please reach out and we'll be happy to support. For those staying at the Ryandale Inn, there will be a constant flow of taxis — just speak to the receptionist.">
+              There is no organised transport — we kindly ask guests to arrange their own. If you need any help, please reach out and we'll be happy to support. For those staying at the Ryandale Inn, there will be a constant flow of taxis — just speak to the receptionist.
             </p>
           </div>
         </div>
@@ -1910,9 +2066,9 @@ footer {
           </button>
           <div class="faq-a">
             <p class="t"
-              data-pt="Sua presença é o nosso maior presente! Para quem desejar presentear, uma lista estará disponível em breve neste site."
-              data-en="Your presence is our greatest gift! For those who wish to give a gift, a list will be available on this site shortly.">
-              Your presence is our greatest gift! For those who wish to give a gift, a list will be available on this site shortly.
+              data-pt="A sua presença é o nosso maior presente! Para quem desejar nos presentear, todos os detalhes estão na seção Presentes deste site."
+              data-en="Your presence is our greatest gift! For those who wish to give a gift, all the details are in the Gifts section of this website.">
+              Your presence is our greatest gift! For those who wish to give a gift, all the details are in the Gifts section of this website.
             </p>
           </div>
         </div>
@@ -1946,6 +2102,12 @@ footer {
         <div id="rsvp-form-wrap">
           <form class="rsvp-form" onsubmit="submitRsvp(event)">
 
+            <div class="form-note t"
+              data-pt="Devido à capacidade limitada dos locais, não podemos receber acompanhantes, a menos que isso esteja explicitamente indicado no seu convite. Agradecemos a compreensão!"
+              data-en="Due to the venues' capacity restrictions, we are unable to accommodate plus-ones unless explicitly stated on your invitation. Thank you for understanding!">
+              Due to the venues' capacity restrictions, we are unable to accommodate plus-ones unless explicitly stated on your invitation. Thank you for understanding!
+            </div>
+
             <div class="form-row">
               <div class="form-field">
                 <label class="form-label t" data-pt="Nome Completo" data-en="Full Name">Full Name</label>
@@ -1968,60 +2130,32 @@ footer {
 
             <div id="attending-fields" style="display:none; flex-direction:column; gap:18px;">
 
-              <!-- COMPANION -->
+              <!-- ABROAD -->
               <div class="form-field">
-                <label class="form-label t" data-pt="Você virá com acompanhante?" data-en="Will you be bringing a guest?">Will you be bringing a guest?</label>
-                <select class="form-select" id="f-companion" onchange="toggleCompanion()">
+                <label class="form-label t" data-pt="Você vai viajar do exterior para o casamento?" data-en="Are you travelling from abroad for the wedding?">Are you travelling from abroad for the wedding?</label>
+                <select class="form-select" id="f-abroad" onchange="toggleAbroad()">
                   <option value="" class="t" data-pt="Selecione..." data-en="Select...">Select...</option>
-                  <option value="yes" class="t" data-pt="Sim, terei um acompanhante" data-en="Yes, I will bring a guest">Yes, I will bring a guest</option>
-                  <option value="no" class="t" data-pt="Não, virei sozinho(a)" data-en="No, I will attend alone">No, I will attend alone</option>
+                  <option value="yes" class="t" data-pt="Sim, venho do exterior" data-en="Yes, I'm travelling from abroad">Yes, I'm travelling from abroad</option>
+                  <option value="no" class="t" data-pt="Não, moro no Reino Unido / Irlanda" data-en="No, I live in the UK / Ireland">No, I live in the UK / Ireland</option>
                 </select>
-              </div>
-
-              <div id="companion-name-field" style="display:none;">
-                <div class="form-field">
-                  <label class="form-label t" data-pt="Nome do acompanhante" data-en="Guest's full name">Guest's full name</label>
-                  <input class="form-input" type="text" id="f-companion-name" placeholder="—">
-                </div>
               </div>
 
               <!-- EVENTS -->
               <div class="form-field">
                 <label class="form-label t" data-pt="Quais eventos você irá?" data-en="Which events will you attend?">Which events will you attend?</label>
                 <div class="form-checkbox-group">
-                  <label class="form-check">
+                  <label class="form-check intl-event" style="display:none;">
                     <input type="checkbox" id="f-ev1">
-                    <span class="t" data-pt="Evento I — Pré-Casamento (a confirmar)" data-en="Event I — Pre-Wedding (TBC)">Event I — Pre-Wedding (TBC)</span>
+                    <span class="t" data-pt="Evento I — Pré-Casamento, 18 de Junho · Rosehill House" data-en="Event I — Pre-Wedding, 18th June · Rosehill House">Event I — Pre-Wedding, 18th June · Rosehill House</span>
                   </label>
                   <label class="form-check">
                     <input type="checkbox" id="f-ev2" checked>
                     <span class="t" data-pt="Evento II — Cerimônia & Recepção, 19 de Junho" data-en="Event II — Ceremony & Reception, 19th June">Event II — Ceremony & Reception, 19th June</span>
                   </label>
-                  <label class="form-check">
+                  <label class="form-check intl-event" style="display:none;">
                     <input type="checkbox" id="f-ev3">
-                    <span class="t" data-pt="Evento III — Dia Seguinte, 20 de Junho (a confirmar)" data-en="Event III — Day After, 20th June (TBC)">Event III — Day After, 20th June (TBC)</span>
+                    <span class="t" data-pt="Evento III — Dia Seguinte, 20 de Junho · Bishops, Moy" data-en="Event III — Day After, 20th June · Bishops, Moy">Event III — Day After, 20th June · Bishops, Moy</span>
                   </label>
-                </div>
-              </div>
-
-              <!-- DINNER CHOICE -->
-              <div class="form-field">
-                <label class="form-label t" data-pt="Sua preferência de jantar" data-en="Your dinner preference">Your dinner preference</label>
-                <select class="form-select" id="f-dinner">
-                  <option value="" class="t" data-pt="Selecione..." data-en="Select...">Select...</option>
-                  <option value="turkey" class="t" data-pt="Peru" data-en="Turkey">Turkey</option>
-                  <option value="beef" class="t" data-pt="Carne Bovina" data-en="Beef">Beef</option>
-                </select>
-              </div>
-
-              <div id="companion-dinner-field" style="display:none;">
-                <div class="form-field">
-                  <label class="form-label t" data-pt="Preferência de jantar do acompanhante" data-en="Guest's dinner preference">Guest's dinner preference</label>
-                  <select class="form-select" id="f-dinner-companion">
-                    <option value="" class="t" data-pt="Selecione..." data-en="Select...">Select...</option>
-                    <option value="turkey" class="t" data-pt="Peru" data-en="Turkey">Turkey</option>
-                    <option value="beef" class="t" data-pt="Carne Bovina" data-en="Beef">Beef</option>
-                  </select>
                 </div>
               </div>
 
@@ -2029,6 +2163,12 @@ footer {
               <div class="form-field">
                 <label class="form-label t" data-pt="Restrições Alimentares" data-en="Dietary Requirements">Dietary Requirements</label>
                 <input class="form-input" type="text" id="f-diet" placeholder="—">
+              </div>
+
+              <!-- SONGS -->
+              <div class="form-field">
+                <label class="form-label t" data-pt="Música(s) que você gostaria de ouvir (opcional)" data-en="Song(s) you'd love to hear (optional)">Song(s) you'd love to hear (optional)</label>
+                <input class="form-input" type="text" id="f-songs" placeholder="—">
               </div>
 
             </div>
@@ -2222,6 +2362,24 @@ function copyGift(btn, text) {
   });
 }
 
+// ─── GALLERY ───
+function checkGallery() {
+  const grid = document.getElementById('gallery-grid');
+  if (grid && grid.children.length === 0) {
+    grid.style.display = 'none';
+    document.getElementById('gallery-empty').classList.add('show');
+  }
+}
+function openLightbox(item) {
+  const img = item.querySelector('img');
+  document.getElementById('lightbox-img').src = img.src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
 // ─── FAQ ───
 function toggleFaq(btn) {
   const item = btn.closest('.faq-item');
@@ -2235,12 +2393,15 @@ function toggleAttending() {
   const val = document.getElementById('f-attend').value;
   const fields = document.getElementById('attending-fields');
   fields.style.display = val === 'yes' ? 'flex' : 'none';
+  document.getElementById('f-abroad').required = (val === 'yes');
 }
 
-function toggleCompanion() {
-  const val = document.getElementById('f-companion').value;
-  document.getElementById('companion-name-field').style.display = val === 'yes' ? 'block' : 'none';
-  document.getElementById('companion-dinner-field').style.display = val === 'yes' ? 'block' : 'none';
+function toggleAbroad() {
+  const abroad = document.getElementById('f-abroad').value === 'yes';
+  document.querySelectorAll('.intl-event').forEach(el => {
+    el.style.display = abroad ? 'flex' : 'none';
+    if (!abroad) el.querySelector('input').checked = false;
+  });
 }
 
 // ─── FORMSPREE ENDPOINT ───
@@ -2255,7 +2416,7 @@ async function submitRsvp(e) {
   btn.disabled = true;
 
   const attending = document.getElementById('f-attend').value;
-  const companion = attending === 'yes' ? document.getElementById('f-companion').value : 'no';
+  const abroad = attending === 'yes' ? document.getElementById('f-abroad').value : '';
   const lang = currentLang;
   const yes = lang === 'pt' ? 'Sim' : 'Yes';
   const no  = lang === 'pt' ? 'Não' : 'No';
@@ -2265,14 +2426,12 @@ async function submitRsvp(e) {
     Nome:                    document.getElementById('f-name').value,
     Email:                   document.getElementById('f-email').value,
     Presença:                attending === 'yes' ? '✅ Confirmado' : '❌ Não poderá comparecer',
-    Acompanhante:            companion === 'yes' ? yes : no,
-    'Nome do acompanhante':  companion === 'yes' ? (document.getElementById('f-companion-name').value || '—') : '—',
+    'Viaja do exterior':     abroad ? (abroad === 'yes' ? yes : no) : '—',
     'Evento I (Pré-casamento)': document.getElementById('f-ev1').checked ? yes : no,
     'Evento II (Cerimônia)':    document.getElementById('f-ev2').checked ? yes : no,
     'Evento III (Dia seguinte)':document.getElementById('f-ev3').checked ? yes : no,
-    'Jantar (convidado)':       attending === 'yes' ? (document.getElementById('f-dinner').value || '—') : '—',
-    'Jantar (acompanhante)':    companion === 'yes' ? (document.getElementById('f-dinner-companion').value || '—') : '—',
     'Restrições alimentares':   document.getElementById('f-diet').value || '—',
+    'Músicas':                  document.getElementById('f-songs').value || '—',
     Mensagem:                   document.getElementById('f-msg').value || '—',
   };
 
