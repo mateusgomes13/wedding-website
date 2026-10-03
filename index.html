@@ -614,18 +614,18 @@ section { padding: 80px 24px; }
 }
 .mosaic {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 }
 .tile {
-  position: relative; aspect-ratio: 1 / 1; overflow: hidden;
+  position: relative; aspect-ratio: 3 / 4; overflow: hidden;
   background: var(--cream-dark); cursor: zoom-in;
   border: 1px solid rgba(184,148,60,0.3);
 }
 .tile img {
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; opacity: 0;
-  transition: opacity 1.2s ease, transform 6s ease;
+  transition: opacity 0.8s ease, transform 6s ease;
 }
 .tile img.on { opacity: 1; }
 .tile:hover img.on { transform: scale(1.04); }
@@ -637,7 +637,7 @@ section { padding: 80px 24px; }
   padding: 12px 28px; cursor: pointer; transition: all 0.3s;
 }
 .shuffle-btn:hover { background: var(--gold); color: var(--white); }
-@media (max-width: 620px) { .mosaic { gap: 6px; } }
+@media (max-width: 620px) { .mosaic { grid-template-columns: repeat(3, 1fr); gap: 6px; } }
 
 .lightbox {
   position: fixed; inset: 0; z-index: 3000;
@@ -2371,7 +2371,9 @@ function copyGift(btn, text) {
 
 // ─── GALLERY (shuffled living mosaic) ───
 const PHOTO_COUNT = 58;
-const TILE_COUNT = 9;
+const mobileMQ = window.matchMedia('(max-width: 620px)');
+let TILE_COUNT = mobileMQ.matches ? 3 : 4;
+mobileMQ.addEventListener('change', e => { TILE_COUNT = e.matches ? 3 : 4; buildMosaic(); });
 const PHOTOS = Array.from({length: PHOTO_COUNT}, (_, i) => String(i + 1).padStart(2, '0'));
 let photoOrder = [], tileState = [], queuePos = 0, mosaicTimer = null, lbIndex = 0;
 const thumbSrc = id => `photos/thumb/couple-${id}.jpg`;
@@ -2430,7 +2432,7 @@ function swapRandomTile() {
 
 function startMosaic() {
   clearInterval(mosaicTimer);
-  if (!reduceMotion) mosaicTimer = setInterval(swapRandomTile, 3500);
+  if (!reduceMotion) mosaicTimer = setInterval(swapRandomTile, 2000);
 }
 
 function shuffleMosaic() {
