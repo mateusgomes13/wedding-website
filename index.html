@@ -509,10 +509,29 @@ section { padding: 80px 24px; }
 .schedule-day-header { align-items: flex-end; min-height: 78px; }
 .white-dress {
   margin-bottom: 28px; text-align: center;
-  border: 1px solid rgba(255,255,255,0.35);
-  background: rgba(255,255,255,0.06);
-  padding: 28px 24px;
+  border: 1px solid rgba(184,148,60,0.18);
+  background: transparent;
+  padding: 20px 24px;
 }
+.white-dress .dress-title { font-size: 20px; margin-bottom: 6px; }
+.white-dress .dress-desc { font-size: 12.5px; color: rgba(255,255,255,0.5); }
+.dress-main {
+  position: relative; text-align: center;
+  border: 1px solid var(--gold);
+  background: rgba(255,255,255,0.07);
+  box-shadow: 0 0 0 6px rgba(184,148,60,0.08), 0 20px 60px rgba(0,0,0,0.25);
+  padding: 40px 32px 32px;
+}
+.dress-main-label {
+  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 5px;
+  color: var(--gold); text-transform: uppercase; margin-bottom: 6px;
+}
+.dress-main-title {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 38px; color: var(--white); margin-bottom: 28px; line-height: 1.1;
+}
+.dress-main .dress-card { border-color: rgba(184,148,60,0.4); background: rgba(42,63,48,0.55); }
+@media (max-width: 540px) { .dress-main { padding: 32px 16px 20px; } .dress-main-title { font-size: 30px; } }
 .form-note {
   border-left: 3px solid var(--gold);
   background: var(--cream);
@@ -1795,7 +1814,9 @@ footer {
           For our welcome party, we kindly ask everyone to dress in white — head to toe!
         </div>
       </div>
-      <div class="dress-label reveal t" style="text-align:center; margin-bottom:16px;" data-pt="Dia II · O Casamento · 19 de Junho" data-en="Day II · The Wedding · 19th June">Day II · The Wedding · 19th June</div>
+      <div class="dress-main reveal">
+        <div class="dress-main-label t" data-pt="Dia II · 19 de Junho" data-en="Day II · 19th June">Day II · 19th June</div>
+        <div class="dress-main-title t" data-pt="O Dia do Casamento" data-en="The Wedding Day">The Wedding Day</div>
       <div class="dress-grid">
         <div class="dress-card reveal">
           <div class="dress-icon">♀</div>
@@ -1818,6 +1839,7 @@ footer {
             Lounge suit with tie is the dress code. Morning dress is welcome for those who prefer it. Please avoid casual attire.
           </div>
         </div>
+      </div>
       </div>
       <div class="white-dress reveal" style="margin-top:28px; margin-bottom:0;">
         <span class="intl-badge t" data-pt="Apenas convidados internacionais" data-en="International guests only">International guests only</span>
