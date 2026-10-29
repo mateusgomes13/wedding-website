@@ -389,6 +389,12 @@ nav {
   align-self: flex-start;
   padding-top: 8px;
 }
+@media (max-width: 520px) {
+  .countdown { gap: clamp(4px, 2.5vw, 14px); justify-content: center; max-width: 100%; }
+  .cd-num { font-size: clamp(28px, 9.5vw, 40px); min-width: clamp(40px, 14vw, 56px); }
+  .cd-sep { font-size: clamp(22px, 7vw, 30px); padding-top: 4px; }
+  .cd-label { font-size: 7px; letter-spacing: 2px; }
+}
 
 /* ─── SECTIONS ─── */
 section { padding: 80px 24px; }
