@@ -2391,7 +2391,7 @@ function copyGift(btn, text) {
 }
 
 // ─── GALLERY (shuffled living mosaic) ───
-const PHOTO_COUNT = 58;
+const PHOTO_COUNT = 5;
 const mobileMQ = window.matchMedia('(max-width: 620px)');
 let TILE_COUNT = mobileMQ.matches ? 3 : 4;
 mobileMQ.addEventListener('change', e => { TILE_COUNT = e.matches ? 3 : 4; buildMosaic(); });
